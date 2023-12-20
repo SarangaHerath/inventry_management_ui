@@ -1,0 +1,23 @@
+/* Dashboard.scss */
+
+.dashboard-container {
+    padding: 20px;
+   
+  
+    .card-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-radius: 20px;
+      
+      
+      .MuiCard-root {
+        width: 100%;
+      }
+    }
+  
+    .graph-container {
+      margin-top: 20px;
+    }
+  }
+  
