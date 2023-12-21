@@ -13,8 +13,9 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  Divider,
 } from '@mui/material';
-
+import './newSales.scss'
 const NewSales = () => {
   const [saleData, setSaleData] = useState({
     customerId: '',
@@ -33,15 +34,13 @@ const NewSales = () => {
     const selectedProductIds = event.target.value;
     setSaleData({ ...saleData, productIds: selectedProductIds });
 
-    // Fetch and update product details based on selected product IDs
-    // (You should replace this with your actual logic to fetch product details from the server)
     const updatedSelectedProducts = selectedProductIds.map((productId) => {
       return {
         productId,
-        productName: `Product ${productId}`, // Replace with actual product name
-        unitPrice: 10.0, // Replace with actual unit price
-        quantity: 1, // Default to 1 quantity
-        total: 10.0, // Default to unit price
+        productName: `Product ${productId}`,
+        unitPrice: 10.0,
+        quantity: 1,
+        total: 10.0,
       };
     });
 
@@ -63,48 +62,45 @@ const NewSales = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle form submission (e.g., send data to the server)
     console.log('Sale Data:', saleData);
     console.log('Selected Products:', selectedProducts);
-    // Add your logic to send the data to the server
   };
 
   return (
     <div>
       <h2>Add New Sale</h2>
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <FormControl fullWidth variant="outlined">
+    
+        <Grid container spacing={2} className='grid'>
+          <Grid item xs={12} sm={3}>
+            <FormControl fullWidth variant="outlined" className="formControl">
               <InputLabel>Customer ID</InputLabel>
               <Select
                 label="Customer ID"
                 value={saleData.customerId}
                 onChange={handleInputChange('customerId')}
+                size="small"
+                id="filled-hidden-label-small"
+                defaultValue="Small"
               >
-                {/* Replace with your customer options */}
                 <MenuItem value={1}>Customer 1</MenuItem>
                 <MenuItem value={2}>Customer 2</MenuItem>
-                {/* Add more items as needed */}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={4}>
+
+          <Grid item xs={12} sm={2} className="addButton">
             <FormControl fullWidth variant="outlined">
-              <InputLabel>Payment Method ID</InputLabel>
-              <Select
-                label="Payment Method ID"
-                value={saleData.paymentMethodId}
-                onChange={handleInputChange('paymentMethodId')}
-              >
-                {/* Replace with your payment method options */}
-                <MenuItem value={1}>Payment Method 1</MenuItem>
-                <MenuItem value={2}>Payment Method 2</MenuItem>
-                {/* Add more items as needed */}
-              </Select>
+              <Button variant="outlined" color="primary" padding="10px">
+                New Customer
+              </Button>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Divider />
+ 
+        </Grid>
+        <Grid container spacing={2} className='grid'>
+        <Grid item xs={12} sm={3}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Product IDs</InputLabel>
               <Select
@@ -112,24 +108,20 @@ const NewSales = () => {
                 multiple
                 value={saleData.productIds}
                 onChange={handleProductIdsChange}
+                size="small"
+                id="filled-hidden-label-small"
+                defaultValue="Small"
               >
-                {/* Replace with your product options */}
                 <MenuItem value={1}>Product 1</MenuItem>
                 <MenuItem value={2}>Product 2</MenuItem>
-                {/* Add more items as needed */}
               </Select>
             </FormControl>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Add Sale
-            </Button>
-          </Grid>
-        </Grid>
       </form>
 
       {/* Display selected products in a table */}
-      <TableContainer>
+      <TableContainer style={{ maxHeight: '300px', overflowY: 'auto' }} className="tableContainer">
         <Table>
           <TableHead>
             <TableRow>
@@ -147,11 +139,15 @@ const NewSales = () => {
                 <TableCell>{product.productName}</TableCell>
                 <TableCell>{product.unitPrice}</TableCell>
                 <TableCell>
-                  <TextField
-                    type="number"
+                  <input type="number"
                     value={product.quantity}
-                    onChange={handleQuantityChange(product.productId)}
-                  />
+                    onChange={handleQuantityChange(product.productId)}></input>
+                  {/* <TextField
+                    
+                    size="small"
+              id="filled-hidden-label-small"
+              defaultValue="Small"
+                  /> */}
                 </TableCell>
                 <TableCell>{product.total}</TableCell>
               </TableRow>
@@ -159,6 +155,73 @@ const NewSales = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <div className="fixedInputSection">
+        <Grid container spacing={2} className='grid'>
+          <Grid item xs={12} sm={1}>
+            <TextField
+              label="Discount ID"
+              fullWidth
+              variant="outlined"
+              value={saleData.discountId}
+              onChange={handleInputChange('discountId')}
+              padding={0}
+              size="small"
+              id="filled-hidden-label-small"
+              defaultValue="Small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={1}>
+            <TextField
+              label="Other Input"
+              fullWidth
+              variant="outlined"
+              size="small"
+              id="filled-hidden-label-small"
+              defaultValue="Small"
+              // Add other input fields as needed
+            />
+          </Grid>
+          <Grid item xs={12} sm={1}>
+            <TextField
+              label="Other Input"
+              fullWidth
+              variant="outlined"
+              size="small"
+              id="filled-hidden-label-small"
+              defaultValue="Small"
+              // Add other input fields as needed
+            />
+          </Grid>
+          <Grid item xs={12} sm={1}>
+            <TextField
+              label="Other Input"
+              fullWidth
+              variant="outlined"
+              size="small"
+              id="filled-hidden-label-small"
+              defaultValue="Small"
+              // Add other input fields as needed
+            />
+          </Grid>
+          <Grid item xs={12} sm={1}>
+            <TextField
+              label="Other Input"
+              fullWidth
+              variant="outlined"
+              size="small"
+              id="filled-hidden-label-small"
+              defaultValue="Small"
+              // Add other input fields as needed
+            />
+          </Grid>
+          <Grid item xs={12} sm={1}>
+            <Button type="button" variant="contained" color="primary">
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
+      </div>
     </div>
   );
 };
