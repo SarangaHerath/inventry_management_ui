@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, InputLabel, Select, MenuItem, Grid } from '@mui/material';
 import './addNewShop.scss'
 export const AddNewShop = () => {
   // State to manage form data
@@ -15,7 +15,14 @@ export const AddNewShop = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
   // Function to handle form submission
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -30,14 +37,15 @@ export const AddNewShop = () => {
       deliveryRoute:''
     });
   };
-
+ 
   return (
     <div>
      
       {/* Form for adding a new shop */}
-      <form onSubmit={handleFormSubmit} className='add-shop-form'>
+      <form onSubmit={handleFormSubmit} className='add-shop-form' >
       <label className='form-title'>Add New Shop</label>
       <div>
+      
       <TextField
           variant="outlined"
           label="Shop Name"
@@ -71,17 +79,32 @@ export const AddNewShop = () => {
           fullWidth
           margin="normal"
         />
-      <TextField
+       
+      
         
-        variant="outlined"
-        label="Delievry Route"
-        name="delieveryRoute"
-        value={formData.deliveryRoute}
-        onChange={handleInputChange}
-        required
-        fullWidth
-        margin="normal"
-      />
+       <InputLabel id="demo-simple-select-autowidth-label">Delivery Route</InputLabel>
+        <Select
+          labelId="demo-simple-select-autowidth-label"
+          id="demo-simple-select-autowidth"
+          value={formData.deliveryRoute}
+          onChange={handleInputChange}
+          open={open}
+          onClose={handleClose}
+          onOpen={handleOpen}
+          autoWidth
+          label="Delivery Route"
+          className='selectfield'
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={10}>Twenty</MenuItem>
+          <MenuItem value={21}>Twenty one</MenuItem>
+          <MenuItem value={22}>Twenty one and a half</MenuItem>
+        </Select>
+   
+  
+
       </div>
        
 
