@@ -71,6 +71,7 @@ export const EditDeliveryRoute = (props) => {
             InputProps={{ readOnly: false }}
             fullWidth
             margin="normal"
+            size="small"
           />
           <TextField
             variant="outlined"
@@ -81,6 +82,7 @@ export const EditDeliveryRoute = (props) => {
             required
             fullWidth
             margin="normal"
+            size="small"
           />
           <DialogActions>
             <Button type="submit" variant="contained" color="primary">
