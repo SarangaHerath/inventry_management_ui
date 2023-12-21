@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
-  min-width: 500px;
 
   .form-title {
     font-size: 20px;
@@ -14,7 +13,7 @@
 
   .textfield {
     width: 100%;
-    // margin-right: 8px; // Add margin to create space between text fields
+    margin-right: 8px;
   }
 
   .buttonfield {
@@ -27,7 +26,10 @@
 
   .grid-item {
     display: flex;
-    gap: 8px; // Adjust the gap as needed
+    gap: 8px;
   }
- 
+
+  .centered-label {
+    text-align: center;
+  }
 }

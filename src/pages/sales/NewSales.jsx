@@ -14,8 +14,12 @@ import {
   TableCell,
   TableBody,
   Divider,
+  Dialog,
+  Grow,
 } from '@mui/material';
 import './newSales.scss'
+import { AddNewProducts } from '../products/AddNewProducts';
+import { AddNewShop } from '../shop/AddNewShop';
 const NewSales = () => {
   const [saleData, setSaleData] = useState({
     customerId: '',
@@ -65,7 +69,39 @@ const NewSales = () => {
     console.log('Sale Data:', saleData);
     console.log('Selected Products:', selectedProducts);
   };
+  const [openShop, setOpenShop] = React.useState(false);
+  const [openProduct, setOpenProduct] = React.useState(false);
 
+  const handleOpenShop = () => {
+    setOpenShop(true);
+  };
+
+  const handleCloseShop = () => {
+    setOpenShop(false);
+  };
+
+  const handleAddShop = async () => {
+    // Add logic to handle adding a product
+    // ...
+    // After adding the product, close the modal
+    handleCloseShop();
+  };
+
+  ////////////////////
+  const handleOpenProduct = () => {
+    setOpenProduct(true);
+  };
+
+  const handleCloseProduct = () => {
+    setOpenProduct(false);
+  };
+
+  const handleAddProduct = async () => {
+    // Add logic to handle adding a product
+    // ...
+    // After adding the product, close the modal
+    handleCloseProduct();
+  };
   return (
     <div>
       <h2>Add New Sale</h2>
@@ -89,10 +125,10 @@ const NewSales = () => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} sm={2} className="addButton">
+          <Grid item xs={12} sm={1} className="addButton">
             <FormControl fullWidth variant="outlined">
-              <Button variant="outlined" color="primary" padding="10px">
-                New Customer
+              <Button variant="outlined" color="primary" padding="10px" onClick={handleOpenShop}>
+                New +
               </Button>
             </FormControl>
           </Grid>
@@ -117,6 +153,13 @@ const NewSales = () => {
               </Select>
             </FormControl>
             </Grid>
+            <Grid item xs={12} sm={1} className="addButton">
+            <FormControl fullWidth variant="outlined">
+              <Button variant="outlined" color="primary" padding="10px" onClick={handleOpenProduct}>
+                New +
+              </Button>
+            </FormControl>
+          </Grid>
           </Grid>
       </form>
 
@@ -222,6 +265,14 @@ const NewSales = () => {
           </Grid>
         </Grid>
       </div>
+      <Dialog open={openProduct} onClose={handleCloseProduct}TransitionComponent={Grow}
+        transitionDuration={500} >
+    <AddNewProducts></AddNewProducts>
+    </Dialog>
+    <Dialog open={openShop} onClose={handleCloseShop} TransitionComponent={Grow}
+        transitionDuration={500} >
+    <AddNewShop></AddNewShop>
+    </Dialog>
     </div>
   );
 };

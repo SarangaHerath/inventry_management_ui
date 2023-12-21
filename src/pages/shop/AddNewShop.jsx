@@ -33,10 +33,10 @@ export const AddNewShop = () => {
   };
 
   return (
-    <form className='add-shop-form' onSubmit={handleFormSubmit}>
+    <form className='add-shop-form' style={{width:'400px'}} onSubmit={handleFormSubmit} >
       {/* Form for adding a new shop */}
       <label className='form-title'>Add New Shop</label>
-      <Grid container>
+      <Grid container spacing={2}>
   {/* Shop Name and Address on the same line */}
   <Grid item xs={12} sm={12} className="grid-item">
     <TextField
@@ -76,8 +76,8 @@ export const AddNewShop = () => {
       className='textfield'
       size="small"
     />
-    <FormControl variant="outlined" sx={{ minWidth: 275 }}>
-      <InputLabel id="delivery-route-label">Delivery Routes</InputLabel>
+    <FormControl variant="outlined" sx={{ minWidth: 200 }}>
+      <InputLabel id="delivery-route-label">Delivery Route</InputLabel>
       <Select
         labelId="delivery-route-label"
         id="delivery-route"
@@ -88,12 +88,7 @@ export const AddNewShop = () => {
         size="small"
         fullWidth
       >
-       <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+        {/* ... Menu items ... */}
       </Select>
     </FormControl>
     

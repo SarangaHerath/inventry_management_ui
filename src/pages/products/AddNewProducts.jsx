@@ -52,6 +52,7 @@ export const AddNewProducts = () => {
         onChange={handleInputChange}
         required
         className='textfield'
+        size='small'
       />
       <TextField
         variant="outlined"
@@ -61,6 +62,7 @@ export const AddNewProducts = () => {
         onChange={handleInputChange}
         required
         className='textfield'
+        size='small'
       />
       </div>
       <div>
@@ -73,6 +75,7 @@ export const AddNewProducts = () => {
         onChange={handleInputChange}
         required
         className='textfield'
+        size='small'
       />
       <TextField
         variant="outlined"
@@ -83,6 +86,7 @@ export const AddNewProducts = () => {
         onChange={handleInputChange}
         required
         className='textfield'
+        size='small'
       />
       
 
@@ -98,6 +102,7 @@ export const AddNewProducts = () => {
         onChange={handleInputChange}
         required
         className='textfield'
+        size='small'
       />
    
     </div>
