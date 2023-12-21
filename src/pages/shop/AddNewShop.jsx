@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { TextField, Button, InputLabel, Select, MenuItem, Grid } from '@mui/material';
-import './addNewShop.scss'
+import { TextField, Button, InputLabel, Select, MenuItem, FormControl, Grid } from '@mui/material';
+import './addNewShop.scss';
+
 export const AddNewShop = () => {
   // State to manage form data
   const [formData, setFormData] = useState({
     shopName: '',
     address: '',
     phoneNumber: '',
-    deliveryRoute:''
+    deliveryRoute: ''
   });
 
   // Function to handle input changes
@@ -15,14 +16,7 @@ export const AddNewShop = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
-  const [open, setOpen] = React.useState(false);
-  const handleClose = () => {
-    setOpen(false);
-  };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
   // Function to handle form submission
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -34,86 +28,82 @@ export const AddNewShop = () => {
       shopName: '',
       address: '',
       phoneNumber: '',
-      deliveryRoute:''
+      deliveryRoute: ''
     });
   };
- 
+
   return (
-    <div>
-     
+    <form className='add-shop-form' onSubmit={handleFormSubmit}>
       {/* Form for adding a new shop */}
-      <form onSubmit={handleFormSubmit} className='add-shop-form' >
       <label className='form-title'>Add New Shop</label>
-      <div>
-      
-      <TextField
-          variant="outlined"
-          label="Shop Name"
-          name="shopName"
-          value={formData.shopName}
-          onChange={handleInputChange}
-          required
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-        
-          variant="outlined"
-          label="Address"
-          name="address"
-          value={formData.address}
-          onChange={handleInputChange}
-          required
-          fullWidth
-          margin="normal"
-        />
-      </div>
-      <div>
-      <TextField
-          variant="outlined"
-          label="Phone Number"
-          name="phoneNumber"
-          value={formData.phoneNumber}
-          onChange={handleInputChange}
-          required
-          fullWidth
-          margin="normal"
-        />
-       
-      
-        
-       <InputLabel id="demo-simple-select-autowidth-label">Delivery Route</InputLabel>
-        <Select
-          labelId="demo-simple-select-autowidth-label"
-          id="demo-simple-select-autowidth"
-          value={formData.deliveryRoute}
-          onChange={handleInputChange}
-          open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          autoWidth
-          label="Delivery Route"
-          className='selectfield'
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Twenty</MenuItem>
-          <MenuItem value={21}>Twenty one</MenuItem>
-          <MenuItem value={22}>Twenty one and a half</MenuItem>
-        </Select>
-   
-  
+      <Grid container>
+  {/* Shop Name and Address on the same line */}
+  <Grid item xs={12} sm={12} className="grid-item">
+    <TextField
+      variant="outlined"
+      label="Shop Name"
+      name="shopName"
+      value={formData.shopName}
+      onChange={handleInputChange}
+      required
+      fullWidth
+      className='textfield'
+      size="small"
+    />
+    <TextField
+      variant="outlined"
+      label="Address"
+      name="address"
+      value={formData.address}
+      onChange={handleInputChange}
+      required
+      fullWidth
+      className='textfield'
+      size="small"
+    />
+  </Grid>
 
-      </div>
-       
+  {/* Phone Number and Delivery Route on the same line */}
+  <Grid item xs={12} sm={12} className="grid-item">
+    <TextField
+      variant="outlined"
+      label="Phone Number"
+      name="phoneNumber"
+      value={formData.phoneNumber}
+      onChange={handleInputChange}
+      required
+      fullWidth
+      className='textfield'
+      size="small"
+    />
+    <FormControl variant="outlined" sx={{ minWidth: 275 }}>
+      <InputLabel id="delivery-route-label">Delivery Routes</InputLabel>
+      <Select
+        labelId="delivery-route-label"
+        id="delivery-route"
+        name="deliveryRoute"
+        value={formData.deliveryRoute}
+        onChange={handleInputChange}
+        label="Delivery Route"
+        size="small"
+        fullWidth
+      >
+       <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+      </Select>
+    </FormControl>
+    
+  </Grid>
+</Grid>
 
-        {/* Add more fields as needed */}
-        
-        <Button type="submit" variant="contained" color="primary">
-          Add Shop
-        </Button>
-      </form>
-    </div>
+      {/* Add more fields as needed */}
+      <Button type="submit" variant="contained" color="primary" className='buttonfield'>
+        Add Shop
+      </Button>
+    </form>
   );
 };

@@ -223,20 +223,20 @@ export const Shop = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/v1/shop/all');
-        const responseData = response.data;
+//         const response = await axios.get('http://localhost:8080/api/v1/shop/all');
+//         const responseData = response.data;
 
-        const newRows = responseData.map((data) =>
-          createData(
-            data.shopId,
-            data.delivery_route_id,
-            data.shopName,
-            data.address,
-            data.phoneNumber
-          )
-        );
-console.log(newRows);
-        setRows(newRows);
+//         const newRows = responseData.map((data) =>
+//           createData(
+//             data.shopId,
+//             data.delivery_route_id,
+//             data.shopName,
+//             data.address,
+//             data.phoneNumber
+//           )
+//         );
+// console.log(newRows);
+//         setRows(newRows);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -310,7 +310,7 @@ console.log(newRows);
     handleClose();
   };
   return (
-    <Box sx={{  }}>
+    <Box sx={{}}>
     <div style={{ display: 'flex', justifyContent: 'flex-end',marginBottom:"20px" }}>
       
       <Button variant="contained" onClick={handleOpen}>Add New Shop + </Button>

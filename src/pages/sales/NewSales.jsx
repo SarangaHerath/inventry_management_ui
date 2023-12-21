@@ -81,7 +81,7 @@ const NewSales = () => {
                 onChange={handleInputChange('customerId')}
                 size="small"
                 id="filled-hidden-label-small"
-                defaultValue="Small"
+                // defaultValue="Small"
               >
                 <MenuItem value={1}>Customer 1</MenuItem>
                 <MenuItem value={2}>Customer 2</MenuItem>
@@ -124,7 +124,7 @@ const NewSales = () => {
       <TableContainer style={{ maxHeight: '300px', overflowY: 'auto' }} className="tableContainer">
         <Table>
           <TableHead>
-            <TableRow>
+          <TableRow>
               <TableCell>Product ID</TableCell>
               <TableCell>Product Name</TableCell>
               <TableCell>Unit Price</TableCell>

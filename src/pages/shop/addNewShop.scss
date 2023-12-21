@@ -1,36 +1,33 @@
-// AddNewProducts.scss
+// addNewShop.scss
+
 .add-shop-form {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    .form-title{
-      font-size: 20px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    div{
-        display: flex;
-        gap: 20px;
-        // width: 400px;
-        .textfield{
-            width: 300px;
-        }
-        .selectfield{
-          width: 550px;
-          margin: 0px;
-          padding: 0px;
-        }
-       
-    }
-    .buttonfiled{
-        // width: 620px;
-    }
-    .MuiTextField-root {
-      margin-bottom: 16px;
-    }
-  
-    .MuiButton-root {
-      margin-top: 16px;
-    }
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  min-width: 500px;
+
+  .form-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
   }
-  
+
+  .textfield {
+    width: 100%;
+    // margin-right: 8px; // Add margin to create space between text fields
+  }
+
+  .buttonfield {
+    margin-top: 16px;
+  }
+
+  .grid {
+    margin-bottom: 16px;
+  }
+
+  .grid-item {
+    display: flex;
+    gap: 8px; // Adjust the gap as needed
+  }
+ 
+}
