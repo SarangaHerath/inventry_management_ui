@@ -26,14 +26,13 @@ import { Button, Dialog, Grow, LinearProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { AddNewShop } from './AddNewShop';
 
-function createData(id, name, weight, date, unitPrice, quantity) {
+function createData(shopId, delivery_route_id, shopName, address, phoneNumber) {
   return {
-    id,
-    name,
-    weight,
-    date,
-    unitPrice,
-    quantity,
+    shopId,
+    delivery_route_id,
+    shopName,
+    address,
+    phoneNumber,
   };
 }
 
@@ -71,34 +70,34 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'shopId',
     numeric: false,
     disablePadding: true,
-    label: 'Product Name',
+    label: 'Shop Id',
   },
   {
-    id: 'weight',
+    id: 'delivery_route_id',
     numeric: false,
     disablePadding: false,
-    label: 'Weight',
+    label: 'Delivery Route Id',
   },
   {
-    id: 'date',
+    id: 'shopName',
     numeric: false,
     disablePadding: false,
-    label: 'Date',
+    label: 'Shop Name',
   },
   {
-    id: 'unitPrice',
+    id: 'address',
     numeric: true,
     disablePadding: false,
-    label: 'Unit Price',
+    label: 'Address',
   },
   {
-    id: 'quantity',
+    id: 'phoneNumber',
     numeric: true,
     disablePadding: false,
-    label: 'Quantity',
+    label: 'Phone Number',
   },
 ];
 
@@ -224,17 +223,16 @@ export const Shop = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/v1/product/all');
+        const response = await axios.get('http://localhost:8080/api/v1/shop/all');
         const responseData = response.data;
 
         const newRows = responseData.map((data) =>
           createData(
-            data.id,
-            data.productName,
-            data.weight,
-            data.date,
-            data.unitPrice,
-            data.quantity
+            data.shopId,
+            data.delivery_route_id,
+            data.shopName,
+            data.address,
+            data.phoneNumber
           )
         );
 console.log(newRows);
@@ -369,11 +367,11 @@ console.log(newRows);
                           />
                         </TableCell>
                        
-                        <TableCell align="left">{row.name}</TableCell>
-                        <TableCell align="left">{row.weight}</TableCell>
-                        <TableCell align="left">{row.date}</TableCell>
-                        <TableCell align="right">{row.unitPrice}</TableCell>
-                        <TableCell align="right">{row.quantity}</TableCell>
+                        <TableCell align="left">{row.shopId}</TableCell>
+                        <TableCell align="left">{row.delivery_route_id}</TableCell>
+                        <TableCell align="left">{row.shopName}</TableCell>
+                        <TableCell align="right">{row.address}</TableCell>
+                        <TableCell align="right">{row.phoneNumber}</TableCell>
                       </TableRow>
                     );
                   })}
