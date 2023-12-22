@@ -36,7 +36,7 @@ export const AddNewShop = () => {
     <form className='add-shop-form' style={{width:'400px'}} onSubmit={handleFormSubmit} >
       {/* Form for adding a new shop */}
       <label className='form-title'>Add New Shop</label>
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
   {/* Shop Name and Address on the same line */}
   <Grid item xs={12} sm={12} className="grid-item">
     <TextField
@@ -76,7 +76,7 @@ export const AddNewShop = () => {
       className='textfield'
       size="small"
     />
-    <FormControl variant="outlined" sx={{ minWidth: 200 }}>
+    <FormControl variant="outlined" sx={{ minWidth: 195 }}>
       <InputLabel id="delivery-route-label">Delivery Route</InputLabel>
       <Select
         labelId="delivery-route-label"

@@ -11,12 +11,12 @@ import { Dashboard } from "./pages/dashboard/Dashboard";
 import { Login } from "./pages/login/Login";
 import { Navbar } from "./components/navbar/Navbar";
 import { Products } from "./pages/products/Products";
-import NewSales from "./pages/sales/NewSales";
 import { AddNewShop } from "./pages/shop/AddNewShop";
 import { Shop } from "./pages/shop/Shop";
 import { SalesInvoice } from "./pages/sales/SalesInvoice";
 import { SalesInvoiceDetails } from "./pages/sales/SalesInvoiceDetails";
 import { DeliveryRoute } from "./pages/deliveryRoute/DeliveryRoute";
+import { NewSales } from "./pages/sales/NewSales";
 
 function App() {
   return (
