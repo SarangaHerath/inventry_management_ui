@@ -1,6 +1,6 @@
 // NewSales.jsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './NewSales.scss'; // Import the SCSS file
 import { Paper, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, TextField, MenuItem, Button, Dialog, Grow } from '@mui/material';
 import { Label } from 'recharts';
@@ -10,83 +10,122 @@ import { ChequeDetails } from '../../components/chequeDetails/ChequeDetails';
 import { CalendarViewDay } from '@mui/icons-material';
 
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-const getCustomerDetails = (customerId) => {
-  // Fetch customer details based on the customerId
-  // Implement this function
-  return {
-    name: 'John Doe',
-    address: '123 Main St',
-    phone: '123-456-7890',
-  };
-};
+import axios from 'axios';
+
 
 export const NewSales = () => {
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [shopOptions, setShopOptions] = useState([]);
+  const [productOptions, setProductOptions] = useState([]);
+  const [selectedShop, setSelectedShop] = useState(null);
+  const [shopDetails, setShopDetails] = useState(null);
   const [saleData, setSaleData] = useState({
     customerId: '',
     productIds: [],
     paymentMethodId: '',
     discountId: '',
   });
+  const fetchShops = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/v1/shop/all");
+      const shopData = response.data;
+
+      const shopOptions = shopData.map((shop) => (
+        <MenuItem key={shop.shopId} value={shop.shopId}>
+          {shop.shopName}
+        </MenuItem>
+      ));
+
+      setShopOptions(shopOptions);
+    } catch (error) {
+      console.error("Error fetching shop data:", error);
+    }
+  };
+
+  const fetchShopDetails = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/shop/get-by-id/${id}`);
+      const shopDetailsData = response.data;
+      setShopDetails(shopDetailsData);
+    } catch (error) {
+      console.error("Error fetching shop details:", error);
+    }
+  };
+console.log(shopDetails)
   const handleCustomerChange = (event) => {
-    const customerId = event.target.value;
-    const customerDetails = getCustomerDetails(customerId);
-    setSelectedCustomer(customerDetails);
-    setSaleData({ ...saleData, customerId });
-  };
-  const [selectedProducts, setSelectedProducts] = useState([]);
-
-  const handleInputChange = (field) => (event) => {
-    setSaleData({ ...saleData, [field]: event.target.value });
+    const selectedShopId = event.target.value;
+    setSelectedShop(selectedShopId)
+    fetchShopDetails(selectedShopId);
   };
 
-  const handleProductIdsChange = (event) => {
-    const selectedProductIds = event.target.value;
-  
-    // Map selected product IDs to actual product details
-    const updatedSelectedProducts = selectedProductIds.map((productId) => {
-      const existingProduct = selectedProducts.find((product) => product.productId === productId);
-  
-      if (existingProduct) {
-        return existingProduct; // Use existing product details
-      } else {
-        // If the product is not found in the existing products, create a new one
-        return {
-          productId,
-          productName: `Product ${productId}`,
-          unitPrice: 10.0,
-          quantity: 1,
-          total: 10.0,
-        };
-      }
-    });
-  
-    setSaleData({ ...saleData, productIds: selectedProductIds });
-    setSelectedProducts(updatedSelectedProducts);
-  };
-  
+  useEffect(() => {
+    fetchShops();
+  }, []);
+//////////////////////product/////////////////////////////////////////
+const fetchProduct = async () => {
+  try {
+    const response = await axios.get("http://localhost:8080/api/v1/product/all");
+    const productData = response.data;
 
-  const handleQuantityChange = (productId) => (event) => {
-    const updatedSelectedProducts = selectedProducts.map((product) => {
-      if (product.productId === productId) {
-        const quantity = parseInt(event.target.value, 10) || 0;
-        const total = quantity * product.unitPrice;
-        return { ...product, quantity, total };
-      }
-      return product;
-    });
+    const productOptions = productData.map((product) => (
+      <MenuItem key={product.productId} value={product.productId}>
+        {product.productName}
+      </MenuItem>
+    ));
 
-    setSelectedProducts(updatedSelectedProducts);
-  };
+    setProductOptions(productOptions);
+  } catch (error) {
+    console.error("Error fetching product data:", error);
+  }
+};
+console.log(productOptions)
+useEffect(() => {
+  fetchProduct();
+}, []);
+const [selectedProducts,setSelectedProducts]=useState([])
+const [productDetails,serProductDetails]=useState([])
+const handleProductIdsChange = (event) => {
+  const selectedProductIds = event.target.value;
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('Sale Data:', saleData);
-    console.log('Selected Products:', selectedProducts);
-  };
+  const updatedSelectedProducts = selectedProductIds.map((productId) => {
+    const selectedProduct = productDetails.find((product) => product.productId === productId);
+
+    return selectedProduct || { productId, productName: '', unitPrice: 0, quantity: 0, total: 0 };
+  });
+
+  setSelectedProducts(updatedSelectedProducts);
+  setQuantityValues({}); // Reset quantity values when product selection changes
+};
+
+const handleQuantityChange = (productId) => (event) => {
+  const newQuantity = parseInt(event.target.value, 10);
+
+  setQuantityValues((prevQuantityValues) => ({
+    ...prevQuantityValues,
+    [productId]: newQuantity,
+  }));
+
+  // Update total value based on quantity
+  const updatedSelectedProducts = selectedProducts.map((product) => {
+    if (product.productId === productId) {
+      return {
+        ...product,
+        quantity: newQuantity,
+        total: newQuantity * product.unitPrice,
+      };
+    }
+    return product;
+  });
+
+  setSelectedProducts(updatedSelectedProducts);
+};
+
+
+
+///////////////////////////////////////////////////////////////////
   const [open, setOpen] = useState(false);
   const [openShop, setOpenShop] = useState(false);
   const [openCheque, setOpenCheque] = useState(false);
+  const [checkAmount, setCheckAmount] = useState(null);
 
 const handleOpen = () => {
   setOpen(true);
@@ -101,6 +140,13 @@ const handleClose = () => {
   setOpen(false);
   setOpenShop(false);
   setOpenCheque(false)
+};
+
+const handleCloseCheque = (checkAmount) => {
+  setOpenCheque(false);
+  setCheckAmount(checkAmount);
+  // Use the check amount as needed in the NewSales component
+  console.log('Received check amount in NewSales:', checkAmount);
 };
 
 const handleAddProduct = async () => {
@@ -119,64 +165,63 @@ const currentDate = new Date();
           {/* First input field with button */}
           <div className="form-input">
             <div className='form-input-customer'>
-            <TextField
-              id="outlined-select-currency1"
-              select
-              label="Select Customer"
-              defaultValue="EUR"
-              size='small'
-              value={saleData.customerId}
-              onChange={handleCustomerChange}
-            >
-               <MenuItem value={1}>Customer 1</MenuItem>
-                <MenuItem value={2}>Customer 2</MenuItem>
-            </TextField>
-            <Button onClick={handleOpenShop}>New +</Button>
+            {shopOptions && (
+        <TextField
+          id="outlined-select-currency1"
+          select
+          label="Select Shop"
+          defaultValue=""
+          size="small"
+          value={selectedShop}
+          onChange={handleCustomerChange}
+        >
+          {shopOptions.map((option) => (
+            <MenuItem key={option.props.value} value={option.props.value}>
+              {option.props.children}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
+
+      <Button onClick={handleOpenShop}>New +</Button>
             </div>
-            {selectedCustomer && (
-              <div className='customer-details'>
-                <span>Customer Name: {selectedCustomer.name}</span>
-                <span>Customer Address: {selectedCustomer.address}</span>
-                <span>Phone: {selectedCustomer.phone}</span>
-              </div>
-            )}
+            {selectedShop && shopDetails && (
+  <div className='customer-details'>
+   
+    <div> <span>{shopDetails.shopName} | {shopDetails.phoneNumber}</span></div>
+    <span>{shopDetails.address}</span>
+  
+  </div>
+)}
+
           </div>
 
           {/* Second input field with button */}
           <div className="form-input">
             <div className="form-input-product">
-                          <TextField
-                id="outlined-select-currency2"
-                select
-                label="Select Product"
-              
-                size='small'
-                value={saleData.productIds}
-                onChange={handleProductIdsChange}
-                SelectProps={{
-                  multiple: true,
-                }}
-              >
-              <MenuItem value={1}>Product 1</MenuItem>
-              <MenuItem value={2}>Product 2</MenuItem>
-              <MenuItem value={3}>Product 2</MenuItem>
-              <MenuItem value={4}>Product 2</MenuItem>
-              <MenuItem value={5}>Product 2</MenuItem>
-              <MenuItem value={6}>Product 2</MenuItem>
-              <MenuItem value={7}>Product 2</MenuItem>
-              <MenuItem value={8}>Product 2</MenuItem>
-              <MenuItem value={9}>Product 2</MenuItem>
-              <MenuItem value={10}>Product 2</MenuItem>
-              <MenuItem value={11}>Product 2</MenuItem>
-              <MenuItem value={12}>Product 2</MenuItem>
-              <MenuItem value={13}>Product 2</MenuItem>
-              <MenuItem value={14}>Product 2</MenuItem>
-              <MenuItem value={15}>Product 2</MenuItem>
-              <MenuItem value={16}>Product 2</MenuItem>
-              <MenuItem value={17}>Product 2</MenuItem>
-            </TextField>
+            {productOptions && (
+              <TextField
+  id="outlined-select-currency2"
+  select
+  label="Select Product"
+  size="small"
+  value={selectedProducts.map((product) => product.productId)}
+  onChange={handleProductIdsChange}
+  SelectProps={{
+    multiple: true,
+  }}
+  disabled={!selectedShop}
+>
 
-            <Button onClick={handleOpen}>New +</Button>
+    {productOptions.map((option) => (
+      <MenuItem key={option.props.value} value={option.props.value}>
+        {option.props.children}
+      </MenuItem>
+    ))}
+  </TextField>
+)}
+
+            <Button onClick={handleOpen} disabled={!selectedShop}>New +</Button>
 
                 </div>
             <div className='product-details'>
@@ -234,6 +279,7 @@ const currentDate = new Date();
               label="Discount Price"
               size='small'
               fullWidth
+              disabled={!selectedShop}
             />
            
             </div>
@@ -247,6 +293,7 @@ const currentDate = new Date();
                       label="Free Items Price"
                       fullWidth
                       size='small'
+                      disabled={!selectedShop}
                    />
             </div>
           </div>
@@ -259,28 +306,29 @@ const currentDate = new Date();
                       label="Return Items Price"
                       fullWidth
                       size='small'
+                      disabled={!selectedShop}
                    />
             </div>
           </div>
-          
-           
             <div className="form-input">
             <span className='sub-title' style={{marginBottom:"10px",marginTop:'20px',textAlign:'start'}}>Payment Types</span>
             <div className="form-input-product">
-              <Button onClick={handleOpenCheque}>Add Cheque Details</Button>
+              <Button onClick={handleOpenCheque} disabled={!selectedShop}>Add Cheque Details</Button>
             </div>
            
           </div>
           
           <div className="form-input">
           <div className="form-input-product">
-                    <TextField
-                      type='number'
-                      id="outlined"
-                      label="Cheque Value"
-                      fullWidth
-                      size='small'
-                   />
+          <TextField
+              type='number'
+              id="outlined"
+              label="Cheque Value"
+              fullWidth
+              size='small'
+              value={checkAmount !== null ? checkAmount : ''} // Display the check amount or an empty string
+              disabled // Disable the TextField if you want it to be read-only
+            />
             </div>
           </div>
           <div className="form-input">
@@ -291,6 +339,7 @@ const currentDate = new Date();
                       label="Creadit Value"
                       fullWidth
                       size='small'
+                      disabled={!selectedShop}
                    />
             </div>
           </div>
@@ -302,6 +351,7 @@ const currentDate = new Date();
                       label="Cash Value"
                       fullWidth
                       size='small'
+                      disabled={!selectedShop}
                    />
             </div>
           </div>
@@ -310,7 +360,7 @@ const currentDate = new Date();
           <div>
          
           <div className="form-input">
-          <span className='sub-title' style={{marginBottom:"10px"}}>Total</span>
+          <span className='sub-title' style={{marginBottom:"15px"}}>Total</span>
             <div className="form-input-product">
               <TextField
               id="outlined"
@@ -318,6 +368,7 @@ const currentDate = new Date();
               label="Total"
               size='small'
               fullWidth
+              
             />
            
             </div>
@@ -339,9 +390,9 @@ const currentDate = new Date();
         transitionDuration={500} >
        <AddNewShop></AddNewShop>
     </Dialog>
-    <Dialog open={openCheque} onClose={handleClose}TransitionComponent={Grow}
+    <Dialog open={openCheque}onClose={() => handleCloseCheque(null)}TransitionComponent={Grow}
         transitionDuration={500} >
-          <ChequeDetails></ChequeDetails>
+            <ChequeDetails shopId={selectedShop} onClose={handleCloseCheque}/>
     </Dialog>
     </div>
   );
