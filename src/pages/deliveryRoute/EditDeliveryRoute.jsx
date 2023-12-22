@@ -59,10 +59,11 @@ export const EditDeliveryRoute = (props) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Edit Route</DialogTitle>
-      <DialogContent>
-        <form onSubmit={handleFormSubmit}>
+   
+      
+    
+      <div>
+        <form onSubmit={handleFormSubmit} className='add-shop-form'>
           <TextField
             variant="outlined"
             label="ID"
@@ -84,16 +85,19 @@ export const EditDeliveryRoute = (props) => {
             margin="normal"
             size="small"
           />
-          <DialogActions>
+           <Button type="submit" variant="contained" color="primary">
+              Update Route
+            </Button>
+          {/* <DialogActions>
             <Button type="submit" variant="contained" color="primary">
               Update Route
             </Button>
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-          </DialogActions>
+          </DialogActions> */}
         </form>
-      </DialogContent>
-    </Dialog>
+        </div>
+
   );
 };
