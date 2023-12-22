@@ -26,6 +26,7 @@ import { Button, Dialog, Grow, LinearProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { AddNewShop } from "./AddNewShop";
 import { Delete, Edit } from "@mui/icons-material";
+import { EditShop } from "./EditShop";
 
 function createData(shopId, delivery_route_id, shopName, address, phoneNumber) {
   return {
@@ -236,6 +237,7 @@ export const Shop = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
   const [selectedShop, setSelectedShop] = React.useState(null);
+  const [openedit, setOpenEdit] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -248,7 +250,7 @@ console.log(responseData)
         const newRows = responseData.map((data) =>
           createData(
             data.shopId,
-           data.deliveryRoute?.routeName || 'please select route', 
+            data.deliveryRoute?.routeName || 'please select route', 
             data.shopName,
             data.address,
             data.phoneNumber
@@ -273,7 +275,9 @@ console.log(responseData)
     setSelectedShop(row);
     setOpenEdit(true);
   };
-
+  const handleEditClose = () => {
+    setOpenEdit(false);
+  };
   const handleDelete = async (id) => {
     try {
       // Send DELETE request to the API endpoint
@@ -367,6 +371,14 @@ console.log(responseData)
         transitionDuration={500}
       >
         <AddNewShop></AddNewShop>
+      </Dialog>
+      <Dialog
+        open={openedit}
+        onClose={handleEditClose}
+        TransitionComponent={Grow}
+        transitionDuration={500}
+      >
+       <EditShop id={selectedShop ? selectedShop.id : null} onClose={handleEditClose} ></EditShop>
       </Dialog>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
