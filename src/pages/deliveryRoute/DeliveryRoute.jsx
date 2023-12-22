@@ -244,7 +244,21 @@ export const DeliveryRoute = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+  const handleDelete = async (id) => {
+    try {
+      // Send DELETE request to the API endpoint
+      await axios.delete(`http://localhost:8080/api/v1/route/delete/${id}`);
 
+      // Update the state to reflect the changes (remove the deleted row)
+      const updatedRows = rows.filter((row) => row.id !== id);
+      setRows(updatedRows);
+
+      // Clear the selected items
+      setSelected([]);
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
+  };
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
@@ -272,7 +286,7 @@ export const DeliveryRoute = () => {
     }
     setSelected(newSelected);
   };
-
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -311,6 +325,7 @@ export const DeliveryRoute = () => {
     setSelectedRoute(row);
     setOpenEdit(true);
   };
+ 
   const handleEditClose = () => {
     setOpenEdit(false);
   };
@@ -341,7 +356,7 @@ export const DeliveryRoute = () => {
         TransitionComponent={Grow}
         transitionDuration={500}
       >
-      <EditDeliveryRoute id={2} />
+       <EditDeliveryRoute id={selectedRoute ? selectedRoute.id : null} onClose={handleEditClose} />
       </Dialog>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -394,8 +409,9 @@ export const DeliveryRoute = () => {
                           <TableCell align="left">
                             <IconButton
                               aria-label="Edit"
-                              onClick={handleOpenEdit}
-                            >
+                              onClick={() => handleOpenEdit(row)} // Pass the row to handleOpenEdit
+                  >
+                            
                               <Edit />
                             </IconButton>
                             <IconButton
