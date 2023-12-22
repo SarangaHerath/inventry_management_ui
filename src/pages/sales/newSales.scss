@@ -1,61 +1,157 @@
 // NewSales.scss
 
-.container {
-    // padding: 20px;
-  }
-  form{
-    .grid{
+.container1 {
+  display: flex;
+  height: 100%;
+  gap: 20px;
+  .left-side {
+    flex: 3; // Takes up 60% of the container
+    //padding: 20px;
+    // border: 1px solid #ccc;
+
+    .form {
+      margin-bottom: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      .form-input {
         display: flex;
-        align-items: center;
-        margin-top: 10px;
-    }
-  }
-  .formControl {
-    width: 100%;
-    margin-top: 10px;
-  }
-  
-  .addButton {
-    margin-top: 10px;
-  }
-  
-  .tableContainer {
-    max-height: 300px;
-    overflow-y: auto;
-    
-    // Additional styles for the tableContainer
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 15px;
-  
-    // Adjust the styles for the TableHead and TableBody
-    table {
-      width: 100%;
         
-      th, td {
-        text-align: left;
-        padding: 2px 10px;
-        font-size: 12px;
-        border-bottom: 1px solid #ddd;
+        align-items: center;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 8px;
+      
+        justify-content: space-between;
+        .MuiTextField-root {
+          width: 220px; // Adjust the width of the TextField
+        }
+
+        .MuiButton-root {
+          background-color: #ffffff;
        
+          border: 1px solid rgb(0, 17, 255);
+        }
+        .form-input-customer{
+          display: flex;
+          gap: 10px; // Adjust the gap between TextField and Button as needed
+          align-items: center;
+        }
+        .customer-details{
+          display: flex;
+          flex-direction: column;
+          span{
+            font-size: 11px;
+            text-align: end;
+          }
+          
+        }
+        .form-input-product{
+          display: flex;
+          gap: 10px; // Adjust the gap between TextField and Button as needed
+          align-items: center;
+        }
+        .product-details{
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
       }
-  
-      th {
-        padding: 2px 10px;
-        font-size: 12px;
-        background-color: #f2f2f2;
+     
+      
+    }
+
+    .table {
+      border-radius: 10px;
+      .tableContainer {
+        border-radius: 10px;
+        min-height: calc(100vh - 260px);
+        overflow-y: auto;
+        // border: 1px solid #ffffff;
+        border-radius: 4px;
+        margin-top: 15px;
+        background-color: rgb(247, 247, 247);
+        // Adjust the styles for the TableHead and TableBody
+        &::-webkit-scrollbar {
+          width: 8px; // Set the width of the scrollbar
+        }
+    
+        &::-webkit-scrollbar-track {
+          background-color: #f1f1f1; // Set the background color of the track
+        }
+    
+        &::-webkit-scrollbar-thumb {
+          background-color: #cccccc; // Set the color of the thumb
+          border-radius: 6px; // Set the border-radius of the thumb
+        }
+    
+        &::-webkit-scrollbar-thumb:hover {
+          background-color: #9f9e9e; // Set the color of the thumb on hover
+        }
+        table {
+          width: 100%;
+            
+          th, td {
+            text-align: left;
+            padding: 2px 10px;
+            font-size: 12px;
+            border-bottom: 1px solid #cdcbcb;
+            background-color: white;
+          }
+      
+       th {
+        position: sticky; // Make the header sticky
+        top: 0; // Set the distance from the top
+        background-color: #ffffff;
+        z-index: 1; // Set z-index to stack the header on top
+      }
+        }
       }
     }
   }
-  .fixedInputSection {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    padding: 10px;
+
+  .right-side {
+    flex: 1; // Takes up 40% of the container
+    padding: 20px;
+    max-height: calc(100vh - 150px);
     background-color: #fff;
-    .grid{
+    border-radius: 10px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    overflow-y: auto;
+    .form-input {
+      display: flex;
+      // gap: 10px; // Adjust the gap between TextField and Button as needed
+     
+      margin-bottom: 10px;
+     flex-direction: column;
+      .form-input-product{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        .MuiTextField-root {
+          // width: 100%; // Adjust the width of the TextField
+        }
+  
+        .MuiButton-root {
+          width: 100%;
+          background-color: #ffffff;
+         border: 1px solid rgb(0, 17, 255);
+        }
+      }
+     
     }
   }
-  
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .left-side,
+    .right-side {
+      flex: 1; // Reset the flex values for equal width in a column layout
+
+      
+    }
+  }
+}

@@ -1,0 +1,32 @@
+// AddNewProducts.scss
+.add-product-form {
+    display: flex;
+     flex-direction: column;
+    padding: 20px;
+    .form-title{
+      font-size: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+     
+    }
+    div{
+        display: flex;
+        gap: 20px;
+        // width: 400px;
+        .textfield{
+            width: 200px
+        }
+       
+    }
+    .buttonfiled{
+       
+    }
+    .MuiTextField-root {
+      margin-bottom: 12px;
+    }
+  
+    .MuiButton-root {
+      margin-top: 12px;
+    }
+  }
+  

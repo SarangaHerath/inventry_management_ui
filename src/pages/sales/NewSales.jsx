@@ -1,33 +1,39 @@
+// NewSales.jsx
+
 import React, { useState } from 'react';
-import {
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Grid,
-  Table,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Divider,
-  Dialog,
-  Grow,
-} from '@mui/material';
-import './newSales.scss'
+import './NewSales.scss'; // Import the SCSS file
+import { Paper, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, TextField, MenuItem, Button, Dialog, Grow } from '@mui/material';
+import { Label } from 'recharts';
 import { AddNewProducts } from '../products/AddNewProducts';
 import { AddNewShop } from '../shop/AddNewShop';
-const NewSales = () => {
+import { ChequeDetails } from '../../components/chequeDetails/ChequeDetails';
+import { CalendarViewDay } from '@mui/icons-material';
+
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+const getCustomerDetails = (customerId) => {
+  // Fetch customer details based on the customerId
+  // Implement this function
+  return {
+    name: 'John Doe',
+    address: '123 Main St',
+    phone: '123-456-7890',
+  };
+};
+
+export const NewSales = () => {
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [saleData, setSaleData] = useState({
     customerId: '',
     productIds: [],
     paymentMethodId: '',
     discountId: '',
   });
-
+  const handleCustomerChange = (event) => {
+    const customerId = event.target.value;
+    const customerDetails = getCustomerDetails(customerId);
+    setSelectedCustomer(customerDetails);
+    setSaleData({ ...saleData, customerId });
+  };
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   const handleInputChange = (field) => (event) => {
@@ -36,20 +42,29 @@ const NewSales = () => {
 
   const handleProductIdsChange = (event) => {
     const selectedProductIds = event.target.value;
-    setSaleData({ ...saleData, productIds: selectedProductIds });
-
+  
+    // Map selected product IDs to actual product details
     const updatedSelectedProducts = selectedProductIds.map((productId) => {
-      return {
-        productId,
-        productName: `Product ${productId}`,
-        unitPrice: 10.0,
-        quantity: 1,
-        total: 10.0,
-      };
+      const existingProduct = selectedProducts.find((product) => product.productId === productId);
+  
+      if (existingProduct) {
+        return existingProduct; // Use existing product details
+      } else {
+        // If the product is not found in the existing products, create a new one
+        return {
+          productId,
+          productName: `Product ${productId}`,
+          unitPrice: 10.0,
+          quantity: 1,
+          total: 10.0,
+        };
+      }
     });
-
+  
+    setSaleData({ ...saleData, productIds: selectedProductIds });
     setSelectedProducts(updatedSelectedProducts);
   };
+  
 
   const handleQuantityChange = (productId) => (event) => {
     const updatedSelectedProducts = selectedProducts.map((product) => {
@@ -69,102 +84,109 @@ const NewSales = () => {
     console.log('Sale Data:', saleData);
     console.log('Selected Products:', selectedProducts);
   };
-  const [openShop, setOpenShop] = React.useState(false);
-  const [openProduct, setOpenProduct] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [openShop, setOpenShop] = useState(false);
+  const [openCheque, setOpenCheque] = useState(false);
 
-  const handleOpenShop = () => {
-    setOpenShop(true);
-  };
+const handleOpen = () => {
+  setOpen(true);
+};
+const handleOpenShop = () => {
+  setOpenShop(true);
+};
+const handleOpenCheque = () => {
+  setOpenCheque(true);
+};
+const handleClose = () => {
+  setOpen(false);
+  setOpenShop(false);
+  setOpenCheque(false)
+};
 
-  const handleCloseShop = () => {
-    setOpenShop(false);
-  };
+const handleAddProduct = async () => {
+  // Add logic to handle adding a product
+  // ...
+  // After adding the product, close the modal
+  handleClose();
+};
+const currentDate = new Date();
+  const formattedDate = currentDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
 
-  const handleAddShop = async () => {
-    // Add logic to handle adding a product
-    // ...
-    // After adding the product, close the modal
-    handleCloseShop();
-  };
-
-  ////////////////////
-  const handleOpenProduct = () => {
-    setOpenProduct(true);
-  };
-
-  const handleCloseProduct = () => {
-    setOpenProduct(false);
-  };
-
-  const handleAddProduct = async () => {
-    // Add logic to handle adding a product
-    // ...
-    // After adding the product, close the modal
-    handleCloseProduct();
-  };
   return (
-    <div>
-      <h2>Add New Sale</h2>
-      <form onSubmit={handleSubmit}>
-    
-        <Grid container spacing={2} className='grid'>
-          <Grid item xs={12} sm={3}>
-            <FormControl fullWidth variant="outlined" className="formControl">
-              <InputLabel>Customer ID</InputLabel>
-              <Select
-                label="Customer ID"
-                value={saleData.customerId}
-                onChange={handleInputChange('customerId')}
-                size="small"
-                id="filled-hidden-label-small"
-                // defaultValue="Small"
-              >
-                <MenuItem value={1}>Customer 1</MenuItem>
+    <div className="container1">
+      <div className="left-side">
+        <div className="form">
+          {/* First input field with button */}
+          <div className="form-input">
+            <div className='form-input-customer'>
+            <TextField
+              id="outlined-select-currency1"
+              select
+              label="Select Customer"
+              defaultValue="EUR"
+              size='small'
+              value={saleData.customerId}
+              onChange={handleCustomerChange}
+            >
+               <MenuItem value={1}>Customer 1</MenuItem>
                 <MenuItem value={2}>Customer 2</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
+            </TextField>
+            <Button onClick={handleOpenShop}>New +</Button>
+            </div>
+            {selectedCustomer && (
+              <div className='customer-details'>
+                <span>Customer Name: {selectedCustomer.name}</span>
+                <span>Customer Address: {selectedCustomer.address}</span>
+                <span>Phone: {selectedCustomer.phone}</span>
+              </div>
+            )}
+          </div>
 
-          <Grid item xs={12} sm={1} className="addButton">
-            <FormControl fullWidth variant="outlined">
-              <Button variant="outlined" color="primary" padding="10px" onClick={handleOpenShop}>
-                New +
-              </Button>
-            </FormControl>
-          </Grid>
-          <Divider />
- 
-        </Grid>
-        <Grid container spacing={2} className='grid'>
-        <Grid item xs={12} sm={3}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel>Product IDs</InputLabel>
-              <Select
-                label="Product IDs"
-                multiple
+          {/* Second input field with button */}
+          <div className="form-input">
+            <div className="form-input-product">
+                          <TextField
+                id="outlined-select-currency2"
+                select
+                label="Select Product"
+              
+                size='small'
                 value={saleData.productIds}
                 onChange={handleProductIdsChange}
-                size="small"
-                id="filled-hidden-label-small"
-                defaultValue="Small"
+                SelectProps={{
+                  multiple: true,
+                }}
               >
-                <MenuItem value={1}>Product 1</MenuItem>
-                <MenuItem value={2}>Product 2</MenuItem>
-              </Select>
-            </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={1} className="addButton">
-            <FormControl fullWidth variant="outlined">
-              <Button variant="outlined" color="primary" padding="10px" onClick={handleOpenProduct}>
-                New +
-              </Button>
-            </FormControl>
-          </Grid>
-          </Grid>
-      </form>
+              <MenuItem value={1}>Product 1</MenuItem>
+              <MenuItem value={2}>Product 2</MenuItem>
+              <MenuItem value={3}>Product 2</MenuItem>
+              <MenuItem value={4}>Product 2</MenuItem>
+              <MenuItem value={5}>Product 2</MenuItem>
+              <MenuItem value={6}>Product 2</MenuItem>
+              <MenuItem value={7}>Product 2</MenuItem>
+              <MenuItem value={8}>Product 2</MenuItem>
+              <MenuItem value={9}>Product 2</MenuItem>
+              <MenuItem value={10}>Product 2</MenuItem>
+              <MenuItem value={11}>Product 2</MenuItem>
+              <MenuItem value={12}>Product 2</MenuItem>
+              <MenuItem value={13}>Product 2</MenuItem>
+              <MenuItem value={14}>Product 2</MenuItem>
+              <MenuItem value={15}>Product 2</MenuItem>
+              <MenuItem value={16}>Product 2</MenuItem>
+              <MenuItem value={17}>Product 2</MenuItem>
+            </TextField>
 
-      {/* Display selected products in a table */}
-      <TableContainer style={{ maxHeight: '300px', overflowY: 'auto' }} className="tableContainer">
+            <Button onClick={handleOpen}>New +</Button>
+
+                </div>
+            <div className='product-details'>
+           
+              <span>{formattedDate}</span> <CalendarMonthIcon />
+            </div>
+          </div>
+        </div>
+        <div className="table">
+        <TableContainer style={{ maxHeight: '300px', overflowY: 'auto' }} className="tableContainer">
         <Table>
           <TableHead>
           <TableRow>
@@ -198,83 +220,129 @@ const NewSales = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <div className="fixedInputSection">
-        <Grid container spacing={2} className='grid'>
-          <Grid item xs={12} sm={1}>
-            <TextField
-              label="Discount ID"
-              fullWidth
-              variant="outlined"
-              value={saleData.discountId}
-              onChange={handleInputChange('discountId')}
-              padding={0}
-              size="small"
-              id="filled-hidden-label-small"
-              defaultValue="Small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={1}>
-            <TextField
-              label="Other Input"
-              fullWidth
-              variant="outlined"
-              size="small"
-              id="filled-hidden-label-small"
-              defaultValue="Small"
-              // Add other input fields as needed
-            />
-          </Grid>
-          <Grid item xs={12} sm={1}>
-            <TextField
-              label="Other Input"
-              fullWidth
-              variant="outlined"
-              size="small"
-              id="filled-hidden-label-small"
-              defaultValue="Small"
-              // Add other input fields as needed
-            />
-          </Grid>
-          <Grid item xs={12} sm={1}>
-            <TextField
-              label="Other Input"
-              fullWidth
-              variant="outlined"
-              size="small"
-              id="filled-hidden-label-small"
-              defaultValue="Small"
-              // Add other input fields as needed
-            />
-          </Grid>
-          <Grid item xs={12} sm={1}>
-            <TextField
-              label="Other Input"
-              fullWidth
-              variant="outlined"
-              size="small"
-              id="filled-hidden-label-small"
-              defaultValue="Small"
-              // Add other input fields as needed
-            />
-          </Grid>
-          <Grid item xs={12} sm={1}>
-            <Button type="button" variant="contained" color="primary">
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
+        </div>
       </div>
-      <Dialog open={openProduct} onClose={handleCloseProduct}TransitionComponent={Grow}
+      <div className="right-side">
+          <div>
+        
+          <div className="form-input">
+          <span className='sub-title' style={{marginBottom:"10px"}}>Additionals</span>
+            <div className="form-input-product">
+              <TextField
+              id="outlined"
+              type='number'
+              label="Discount Price"
+              size='small'
+              fullWidth
+            />
+           
+            </div>
+          </div>
+          <div className="form-input">
+            
+            <div className="form-input-product">
+                    <TextField
+                      type='number'
+                      id="outlined"
+                      label="Free Items Price"
+                      fullWidth
+                      size='small'
+                   />
+            </div>
+          </div>
+          <div className="form-input">
+            
+            <div className="form-input-product">
+                    <TextField
+                      type='number'
+                      id="outlined"
+                      label="Return Items Price"
+                      fullWidth
+                      size='small'
+                   />
+            </div>
+          </div>
+          
+           
+            <div className="form-input">
+            <span className='sub-title' style={{marginBottom:"10px",marginTop:'20px',textAlign:'start'}}>Payment Types</span>
+            <div className="form-input-product">
+              <Button onClick={handleOpenCheque}>Add Cheque Details</Button>
+            </div>
+           
+          </div>
+          
+          <div className="form-input">
+          <div className="form-input-product">
+                    <TextField
+                      type='number'
+                      id="outlined"
+                      label="Cheque Value"
+                      fullWidth
+                      size='small'
+                   />
+            </div>
+          </div>
+          <div className="form-input">
+          <div className="form-input-product">
+                    <TextField
+                      type='number'
+                      id="outlined"
+                      label="Creadit Value"
+                      fullWidth
+                      size='small'
+                   />
+            </div>
+          </div>
+          <div className="form-input">
+          <div className="form-input-product">
+                    <TextField
+                      type='number'
+                      id="outlined"
+                      label="Cash Value"
+                      fullWidth
+                      size='small'
+                   />
+            </div>
+          </div>
+          </div>
+       {/* ////////////////////////////////////////////// */}
+          <div>
+         
+          <div className="form-input">
+          <span className='sub-title' style={{marginBottom:"10px"}}>Total</span>
+            <div className="form-input-product">
+              <TextField
+              id="outlined"
+              type='number'
+              label="Total"
+              size='small'
+              fullWidth
+            />
+           
+            </div>
+          </div>
+          <div className="form-input">
+         
+            <div className="form-input-product">
+            <Button style={{backgroundColor:"#186bfa",color:'white'}}>Add Sale</Button>
+           
+            </div>
+          </div>
+          </div>
+      </div>
+      <Dialog open={open} onClose={handleClose}TransitionComponent={Grow}
         transitionDuration={500} >
-    <AddNewProducts></AddNewProducts>
+        <AddNewProducts></AddNewProducts>
     </Dialog>
-    <Dialog open={openShop} onClose={handleCloseShop} TransitionComponent={Grow}
+    <Dialog open={openShop} onClose={handleClose}TransitionComponent={Grow}
         transitionDuration={500} >
-    <AddNewShop></AddNewShop>
+       <AddNewShop></AddNewShop>
+    </Dialog>
+    <Dialog open={openCheque} onClose={handleClose}TransitionComponent={Grow}
+        transitionDuration={500} >
+          <ChequeDetails></ChequeDetails>
     </Dialog>
     </div>
   );
 };
-
-export default NewSales;
