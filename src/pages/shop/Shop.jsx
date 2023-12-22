@@ -248,7 +248,7 @@ console.log(responseData)
         const newRows = responseData.map((data) =>
           createData(
             data.shopId,
-            data.deliveryRoute.routeName,
+           data.deliveryRoute?.routeName || 'please select route', 
             data.shopName,
             data.address,
             data.phoneNumber
@@ -389,24 +389,24 @@ console.log(responseData)
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
+                    
                     const labelId = `enhanced-table-checkbox-${index}`;
                     const uniqueKey = `row-${row.id}`;
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.id)}
+                        
                         role="checkbox"
-                        aria-checked={isItemSelected}
+                        
                         tabIndex={-1}
                         key={uniqueKey}
-                        selected={isItemSelected}
+                        
                         sx={{ cursor: "pointer" }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
                             color="primary"
-                            checked={isItemSelected}
+                           
                             inputProps={{
                               "aria-labelledby": labelId,
                             }}
@@ -429,7 +429,7 @@ console.log(responseData)
                             </IconButton>
                             <IconButton
                               aria-label="Delete"
-                              onClick={() => handleDelete(row.id)}
+                              onClick={() => handleDelete(row.shopId)}
                             >
                               <Delete />
                             </IconButton></TableCell>
