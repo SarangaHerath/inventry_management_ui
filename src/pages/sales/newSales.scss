@@ -20,7 +20,7 @@
         background-color: #fff;
         padding: 10px;
         border-radius: 8px;
-      
+       
         justify-content: space-between;
         .MuiTextField-root {
           width: 220px; // Adjust the width of the TextField
@@ -101,6 +101,7 @@
             input{
               width:50px;
               border: 1px solid rgb(183, 182, 182);
+              text-align: center;
             }
           }
       
@@ -140,11 +141,25 @@
         .MuiTextField-root {
           // width: 100%; // Adjust the width of the TextField
         }
-  
+        .total{
+          width: 100%;
+          background-color: rgb(238, 242, 255);
+          height: 50px;
+          border: 2px solid rgb(180, 152, 253);
+          font-size: 18px;
+          font-weight: bold;
+          color: rgb(0, 0, 0);
+          display: flex;
+          align-items: center;
+          justify-content: end;
+          padding:0px 15px
+
+
+        }
         .MuiButton-root {
           width: 100%;
           background-color: #ffffff;
-         border: 1px solid rgb(0, 17, 255);
+         border: 1px solid rgb(192, 196, 255);
         }
       }
      

@@ -73,7 +73,7 @@ export const AddNewShop = () => {
     >
       {/* Form for adding a new shop */}
       <label className='form-title'>Add New Shop</label>
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {/* Shop Name and Address on the same line */}
         <Grid item xs={12} sm={12} className="grid-item">
           <TextField

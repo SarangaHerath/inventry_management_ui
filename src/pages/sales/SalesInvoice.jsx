@@ -1,46 +1,52 @@
-import * as React from 'react';
-import axios from 'axios';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { visuallyHidden } from '@mui/utils';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grow, LinearProgress, TextField } from '@mui/material';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 
-function createData(id, name, weight, date, unitPrice, quantity) {
+import FilterListIcon from "@mui/icons-material/FilterList";
+import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import { alpha, LinearProgress, Button, Dialog, Grow } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import { visuallyHidden } from "@mui/utils";
+function createData(
+  id,
+  shopId,
+  total,
+  returnValue,
+  date,
+  freeItems,
+  cash,
+  credit,
+  cheque,
+  discount,
+  salesInvoiceDetails
+) {
   return {
     id,
-    name,
-    weight,
+    shopId,
+    total,
+    returnValue,
     date,
-    unitPrice,
-    quantity,
+    freeItems,
+    cash,
+    credit,
+    cheque,
+    discount,
+    salesInvoiceDetails,
   };
 }
-
-// Sample data for testing purposes
-const demoData = [
-  createData(1, 'Samaposha Milko', '750g', '2023-12-12', 505, 500),
-  // Add more sample data if needed
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -53,7 +59,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -69,41 +75,27 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: true,
-    label: 'Product Name',
-  },
-  {
-    id: 'weight',
-    numeric: false,
-    disablePadding: false,
-    label: 'Weight',
-  },
-  {
-    id: 'date',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
-  },
-  {
-    id: 'unitPrice',
-    numeric: true,
-    disablePadding: false,
-    label: 'Unit Price',
-  },
-  {
-    id: 'quantity',
-    numeric: true,
-    disablePadding: false,
-    label: 'Quantity',
-  },
+  { id: "id", numeric: false, disablePadding: false, label: "ID" },
+  { id: "shopId", numeric: false, disablePadding: false, label: "Shop ID" },
+  { id: "total", numeric: true, disablePadding: false, label: "Total" },
+  { id: "discount", numeric: true, disablePadding: false, label: "Discount Value" },
+  { id: "returnValue", numeric: true, disablePadding: false, label: "Return Value" },
+  { id: "cheque", numeric: true, disablePadding: false, label: "Cheque Value" },
+  { id: "credit", numeric: true, disablePadding: false, label: "Credit Value" },
+  { id: "cash", numeric: true, disablePadding: false, label: "Cash Value" },
+  { id: "date", numeric: false, disablePadding: false, label: "Date" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -111,33 +103,22 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all products',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            align={headCell.numeric ? "right" : "left"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
             </TableSortLabel>
@@ -152,7 +133,7 @@ EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
@@ -167,13 +148,16 @@ function EnhancedTableToolbar(props) {
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
         }),
       }}
     >
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
@@ -182,19 +166,19 @@ function EnhancedTableToolbar(props) {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          Product List
+          Sales Invoice List
         </Typography>
       )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
-            <DeleteIcon />
+            <Delete />
           </IconButton>
         </Tooltip>
       ) : (
@@ -211,35 +195,46 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-export const SalesInvoice = () => {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('unitPrice');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rows, setRows] = React.useState([]);
 
-  React.useEffect(() => {
+export const SalesInvoice = () => {
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("id");
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rows, setRows] = useState([]);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/v1/product/all');
+        const response = await axios.get(
+          "http://localhost:8080/api/v1/sales-invoices/getAllSales"
+        );
         const responseData = response.data;
+        console.log(responseData);
 
         const newRows = responseData.map((data) =>
           createData(
             data.id,
-            data.productName,
-            data.weight,
+            data.shop.shopId,
+            data.total,
+            data.returnValue,
             data.date,
-            data.unitPrice,
-            data.quantity
+            data.freeItems,
+            data.cash,
+            data.credit,
+            data.cheque,
+            data.discount,
+            data.salesInvoiceDetails
           )
         );
-console.log(newRows);
+
         setRows(newRows);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -247,9 +242,25 @@ console.log(newRows);
   }, []);
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      // Send DELETE request to the API endpoint
+      await axios.delete(`http://localhost:8080/api/v1/sales-invoices/delete/${id}`);
+
+      // Update the state to reflect the changes (remove the deleted row)
+      const updatedRows = rows.filter((row) => row.id !== id);
+      setRows(updatedRows);
+
+      // Clear the selected items
+      setSelected([]);
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
   };
 
   const handleSelectAllClick = (event) => {
@@ -274,7 +285,7 @@ console.log(newRows);
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
     setSelected(newSelected);
@@ -294,44 +305,63 @@ console.log(newRows);
   };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
-  const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
-    setOpen(true);
+    setOpenEdit(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenEdit(false);
   };
 
-  const handleAddProduct = async () => {
-    // Add logic to handle adding a product
+  const handleOpenEdit = (row) => {
+    setSelectedInvoice(row);
+    setOpenEdit(true);
+  };
+
+  const handleEditClose = () => {
+    setOpenEdit(false);
+  };
+
+  const handleAddSales = async () => {
+    // Add logic to handle adding sales
     // ...
-    // After adding the product, close the modal
+    // After adding the sales, close the modal
     handleClose();
   };
 
   return (
-    <Box sx={{  }}>
-    <div style={{ display: 'flex', justifyContent: 'flex-end',marginBottom:"20px" }}>
-    <Link to="/newsale">
-      <Button variant="contained" onClick={handleOpen} >New Sale + </Button>
-      </Link>
-
-    </div>
-    {/* <Dialog open={open} onClose={handleClose}TransitionComponent={Grow}
-        transitionDuration={500} >
-    
-    </Dialog> */}
-
-      <Paper sx={{ width: '100%', mb: 2 }}>
+    <Box sx={{}}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "20px",
+        }}
+      >
+        <Button variant="contained" onClick={handleOpen}>
+          Add New Sales Invoice +
+        </Button>
+      </div>
+      <Dialog
+        open={openEdit}
+        onClose={handleEditClose}
+        TransitionComponent={Grow}
+        transitionDuration={500}
+      >
+        {/* <EditSales
+          salesInvoice={selectedInvoice}
+          handleAddSales={handleAddSales}
+        /> */}
+      </Dialog>
+      <Paper sx={{ width: "100%", mb: 1 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         {rows.length > 0 ? (
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
-              size={dense ? 'small' : 'medium'}
+              size={"small"}
             >
               <EnhancedTableHead
                 numSelected={selected.length}
@@ -345,36 +375,39 @@ console.log(newRows);
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
-                    const uniqueKey = `row-${row.id}`; 
                     return (
                       <TableRow
-                      
                         hover
-                        onClick={(event) => handleClick(event, row.id)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={uniqueKey} 
-                        selected={isItemSelected}
-                        sx={{ cursor: 'pointer' }}
+                        key={row.id}
+                        style={{ cursor: 'pointer', padding: '0px', height: '50px' }}
+                        onClick={() => handleOpenEdit(row)}
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              'aria-labelledby': labelId,
-                            }}
-                          />
-                        </TableCell>
-                       
-                        <TableCell align="left">{row.name}</TableCell>
-                        <TableCell align="left">{row.weight}</TableCell>
+                        <TableCell align="left">{row.id}</TableCell>
+                        <TableCell align="left">{row.shopId}</TableCell>
+                        <TableCell align="right">{row.total}</TableCell>
+                        <TableCell align="right">{row.discount}</TableCell>
+                        <TableCell align="right">{row.returnValue}</TableCell>
+                        <TableCell align="right">{row.cheque}</TableCell>
+                        <TableCell align="right">{row.credit}</TableCell>
+                        <TableCell align="right">{row.cash}</TableCell>
                         <TableCell align="left">{row.date}</TableCell>
-                        <TableCell align="right">{row.unitPrice}</TableCell>
-                        <TableCell align="right">{row.quantity}</TableCell>
+                        <TableCell align="left" padding="20px">
+                          <IconButton
+                            sx={{ color: "#3498DB" }}
+                            aria-label="Edit"
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton
+                            aria-label="Delete"
+                            onClick={() => handleDelete(row.id)}
+                            sx={{ color: "#E74C3C" }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                     );
                   })}

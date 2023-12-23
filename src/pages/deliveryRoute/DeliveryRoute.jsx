@@ -36,11 +36,6 @@ function createData(id, routeName) {
   };
 }
 
-// Sample data for testing purposes
-const demoData = [
-  createData(1, "Samaposha Milko", "750g", "2023-12-12", 505, 500),
-  // Add more sample data if needed
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -72,7 +67,7 @@ const headCells = [
   {
     id: "id",
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: "Id",
   },
   {
@@ -105,17 +100,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all products",
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -365,7 +349,7 @@ export const DeliveryRoute = () => {
             <Table
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
+              size={"small"}
             >
               <EnhancedTableHead
                 numSelected={selected.length}
@@ -385,29 +369,21 @@ export const DeliveryRoute = () => {
                     return (
                       <TableRow
                         hover
-                        // onClick={(event) => handleClick(event, row.id)}
-                        role="checkbox"
+                      
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={uniqueKey}
                         selected={isItemSelected}
                         sx={{ cursor: "pointer" }}
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              "aria-labelledby": labelId,
-                            }}
-                          />
-                        </TableCell>
+                      
 
                         <TableCell align="left">{row.id}</TableCell>
                         <TableCell align="left">{row.routeName}</TableCell>
-                        <TableCell align="center">
+                      
                           <TableCell align="left">
                             <IconButton
+                             sx={{color:'#3498DB'}}
                               aria-label="Edit"
                               onClick={() => handleOpenEdit(row)} // Pass the row to handleOpenEdit
                   >
@@ -417,12 +393,13 @@ export const DeliveryRoute = () => {
                             <IconButton
                               aria-label="Delete"
                               onClick={() => handleDelete(row.id)}
+                              sx={{color:'#E74C3C'}}
                             >
                               <Delete />
                             </IconButton>
                             
                           </TableCell>
-                        </TableCell>
+                     
                       </TableRow>
                     );
                   })}
