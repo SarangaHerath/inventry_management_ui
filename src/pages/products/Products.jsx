@@ -37,11 +37,6 @@ function createData(id, name, weight, date, unitPrice, quantity) {
   };
 }
 
-// Sample data for testing purposes
-const demoData = [
-  createData(1, 'Samaposha Milko', '750g', '2023-12-12', 505, 500),
-  // Add more sample data if needed
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -73,7 +68,7 @@ const headCells = [
   {
     id: 'name',
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: 'Product Name',
   },
   {
@@ -112,17 +107,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all products',
-            }}
-          />
-        </TableCell>
+      
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -353,23 +338,13 @@ console.log(newRows);
                       <TableRow
                       
                         hover
-                        onClick={(event) => handleClick(event, row.id)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
+                       
                         tabIndex={-1}
                         key={uniqueKey} 
                         selected={isItemSelected}
                         sx={{ cursor: 'pointer' }}
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              'aria-labelledby': labelId,
-                            }}
-                          />
-                        </TableCell>
+                      
                        
                         <TableCell align="left">{row.name}</TableCell>
                         <TableCell align="left">{row.weight}</TableCell>

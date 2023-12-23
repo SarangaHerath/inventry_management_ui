@@ -22,7 +22,7 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { Button, Dialog, Grow, LinearProgress } from "@mui/material";
+import { Button, Dialog, Grow, LinearProgress, colors } from "@mui/material";
 import { Link } from "react-router-dom";
 import { AddNewShop } from "./AddNewShop";
 import { Delete, Edit } from "@mui/icons-material";
@@ -37,12 +37,6 @@ function createData(shopId, delivery_route_id, shopName, address, phoneNumber) {
     phoneNumber,
   };
 }
-
-// Sample data for testing purposes
-const demoData = [
-  createData(1, "Samaposha Milko", "750g", "2023-12-12", 505, 500),
-  // Add more sample data if needed
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -74,7 +68,7 @@ const headCells = [
   {
     id: "shopId",
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: "Shop Id",
   },
   {
@@ -91,19 +85,19 @@ const headCells = [
   },
   {
     id: "address",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "Address",
   },
   {
     id: "phoneNumber",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "Phone Number",
   },
   {
     id: "action",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "Actions",
   },
@@ -125,17 +119,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all products",
-            }}
-          />
-        </TableCell>
+     
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -238,7 +222,6 @@ export const Shop = () => {
   const [rows, setRows] = React.useState([]);
   const [selectedShop, setSelectedShop] = React.useState(null);
   const [openedit, setOpenEdit] = React.useState(false);
-
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -271,21 +254,16 @@ console.log(responseData)
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  const handleOpenEdit = (row) => {
-    setSelectedShop(row);
-    setOpenEdit(true);
-  };
-  const handleEditClose = () => {
-    setOpenEdit(false);
-  };
   const handleDelete = async (id) => {
     try {
       // Send DELETE request to the API endpoint
       await axios.delete(`http://localhost:8080/api/v1/shop/delete/${id}`);
 
       // Update the state to reflect the changes (remove the deleted row)
-      const updatedRows = rows.filter((row) => row.id !== id);
-      setRows(updatedRows);
+    // Inside handleDelete function
+    const updatedRows = rows.filter((row) => row.shopId !== id);
+    setRows(updatedRows);
+
 
       // Clear the selected items
       setSelected([]);
@@ -344,6 +322,13 @@ console.log(responseData)
   const handleClose = () => {
     setOpen(false);
   };
+  const handleOpenEdit = (row) => {
+    setSelectedShop(row);
+    setOpenEdit(true);
+  };
+  const handleEditClose = () => {
+    setOpenEdit(false);
+  };
 
   const handleAddProduct = async () => {
     // Add logic to handle adding a product
@@ -378,16 +363,17 @@ console.log(responseData)
         TransitionComponent={Grow}
         transitionDuration={500}
       >
-       <EditShop id={selectedShop ? selectedShop.id : null} onClose={handleEditClose} ></EditShop>
+        <EditShop id={selectedShop ? selectedShop.id : null}></EditShop>
+      
       </Dialog>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      <Paper sx={{ width: "100%", mb: 1 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         {rows.length > 0 ? (
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
+              size={"small"}
             >
               <EnhancedTableHead
                 numSelected={selected.length}
@@ -407,32 +393,22 @@ console.log(responseData)
                     return (
                       <TableRow
                         hover
-                        
-                        role="checkbox"
-                        
                         tabIndex={-1}
                         key={uniqueKey}
-                        
-                        sx={{ cursor: "pointer" }}
+                        style={{ cursor: 'pointer', padding: '0px', height: '50px' }}
+                     
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                           
-                            inputProps={{
-                              "aria-labelledby": labelId,
-                            }}
-                          />
-                        </TableCell>
+                    
 
                         <TableCell align="left">{row.shopId}</TableCell>
                         <TableCell align="left">
                           {row.delivery_route_id}
                         </TableCell>
                         <TableCell align="left">{row.shopName}</TableCell>
-                        <TableCell align="right">{row.address}</TableCell>
-                        <TableCell align="right">{row.phoneNumber}</TableCell>
-                        <TableCell align="right"><IconButton
+                        <TableCell align="left">{row.address}</TableCell>
+                        <TableCell align="left">{row.phoneNumber}</TableCell>
+                        <TableCell align="left" padding="20px"><IconButton
+                          sx={{color:'#3498DB'}}
                               aria-label="Edit"
                               onClick={() => handleOpenEdit(row)} // Pass the row to handleOpenEdit
                   >
@@ -440,8 +416,10 @@ console.log(responseData)
                               <Edit />
                             </IconButton>
                             <IconButton
+                          
                               aria-label="Delete"
                               onClick={() => handleDelete(row.shopId)}
+                              sx={{color:'#E74C3C'}}
                             >
                               <Delete />
                             </IconButton></TableCell>

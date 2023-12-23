@@ -68,7 +68,7 @@ const fetchProduct = async () => {
 
     const productOptions = productData.map((product) => (
       <MenuItem key={product.productId} value={product.productId}>
-        {product.productName}
+        {product.productName}-{product.weight}g
       </MenuItem>
     ));
 
@@ -83,19 +83,28 @@ useEffect(() => {
 }, []);
 const [selectedProducts,setSelectedProducts]=useState([])
 const [productDetails,serProductDetails]=useState([])
-const handleProductIdsChange = (event) => {
+const [quantityValues, setQuantityValues] = useState({});
+const handleProductIdsChange = async (event) => {
   const selectedProductIds = event.target.value;
 
-  const updatedSelectedProducts = selectedProductIds.map((productId) => {
-    const selectedProduct = productDetails.find((product) => product.productId === productId);
-
-    return selectedProduct || { productId, productName: '', unitPrice: 0, quantity: 0, total: 0 };
+  const updatedSelectedProducts = selectedProductIds.map(async (productId) => {
+    // Fetch product details for each selected product
+    const productDetailsResponse = await axios.get(`http://localhost:8080/api/v1/product/get-by-id/${productId}`);
+    const productDetailsData = productDetailsResponse.data;
+    console.log(productDetailsResponse)
+    return {
+      productId,
+      productName: productDetailsData.productName,
+      unitPrice: productDetailsData.unitPrice,
+      weight:productDetailsData.weight,
+      quantity: quantityValues[productId] || 0,
+      total: (quantityValues[productId] || 0) * productDetailsData.unitPrice,
+    };
   });
 
-  setSelectedProducts(updatedSelectedProducts);
-  setQuantityValues({}); // Reset quantity values when product selection changes
+  // Update selected products with details
+  setSelectedProducts(await Promise.all(updatedSelectedProducts));
 };
-
 const handleQuantityChange = (productId) => (event) => {
   const newQuantity = parseInt(event.target.value, 10);
 
@@ -118,7 +127,6 @@ const handleQuantityChange = (productId) => (event) => {
 
   setSelectedProducts(updatedSelectedProducts);
 };
-
 
 
 ///////////////////////////////////////////////////////////////////
@@ -155,9 +163,90 @@ const handleAddProduct = async () => {
   // After adding the product, close the modal
   handleClose();
 };
+////////////////////////////////////////////////////
+const [discountItemAmount, setDiscountItemAmount] = useState(0);
+const [freeItemAmount, setFreeItemAmount] = useState(0);
+const [retunItemAmount, setReturnItemAmount] = useState(0);
+const [cashAmount, setCashAmount] = useState(0);
+const [creditAmount, setCreditAmount] = useState(0);
+
+const handleCashAmountChange = (event) => {
+  const amount = parseFloat(event.target.value) || 0;
+  setCashAmount(amount);
+};
+
+const handleCreditAmountChange = (event) => {
+  const amount = parseFloat(event.target.value) || 0;
+  setCreditAmount(amount);
+};
+const handlediscountItemAmountChange = (event) => {
+  const amount = parseFloat(event.target.value) || 0;
+  setDiscountItemAmount(amount);
+};
+  const handleFreeItemAmountChange = (event) => {
+    const amount = parseFloat(event.target.value) || 0;
+    setFreeItemAmount(amount);
+  };
+  const handleReturnItemAmountChange = (event) => {
+    const amount = parseFloat(event.target.value) || 0;
+    setReturnItemAmount(amount);
+  };
+const calculateTotal = () => {
+  const total = selectedProducts.reduce((acc, product) => acc + product.total, 0);
+  return total;
+};
+
+// Update the total whenever selectedProducts changes
+useEffect(() => {
+  const total = calculateTotal() + freeItemAmount;
+  // Update the state of the Total TextField
+  // You might want to format the total value as needed (e.g., round to 2 decimal places)
+  // and handle any additional logic related to discounts, free items, etc.
+}, [selectedProducts]);
+
+
 const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
+  const handleAddSale = async () => {
+    try {
+      const saleData = {
+        shopId: selectedShop,
+        total: calculateTotal() + freeItemAmount + discountItemAmount + retunItemAmount,
+        returnValue: retunItemAmount,
+        date: formattedDate,
+        freeItems: freeItemAmount,
+        cash: cashAmount,
+        credit: creditAmount,
+        cheque: checkAmount || 0,
+        discount: discountItemAmount,
+        salesInvoiceDetails: selectedProducts.map((product) => ({
+          id: null, // Assuming the backend generates the ID
+          salesInvoiceId: null, // Assuming the backend generates the ID
+          product: {
+            productId: product.productId,
+            productName: product.productName,
+            quantity: product.quantity,
+            unitPrice: product.unitPrice,
+          },
+          quantity: product.quantity,
+          unitPrice: product.unitPrice,
+        })),
+      };
+  
+      console.log("Sale Data:", saleData);
+  
+      // Make a POST request to your backend API to save the sale
+      const response = await axios.post("http://localhost:8080/api/v1/sales-invoices/save", saleData);
+  
+      // Handle success, e.g., show a success message, reset state, etc.
+      console.log("Sale added successfully:", response.data);
+  
+    } catch (error) {
+      // Handle error, e.g., show an error message
+      console.error("Error adding sale:", error);
+    }
+  };
+  
   return (
     <div className="container1">
       <div className="left-side">
@@ -200,26 +289,25 @@ const currentDate = new Date();
           <div className="form-input">
             <div className="form-input-product">
             {productOptions && (
-              <TextField
-  id="outlined-select-currency2"
-  select
-  label="Select Product"
-  size="small"
-  value={selectedProducts.map((product) => product.productId)}
-  onChange={handleProductIdsChange}
-  SelectProps={{
-    multiple: true,
-  }}
-  disabled={!selectedShop}
->
-
-    {productOptions.map((option) => (
-      <MenuItem key={option.props.value} value={option.props.value}>
-        {option.props.children}
-      </MenuItem>
-    ))}
-  </TextField>
-)}
+                <TextField
+                  id="outlined-select-currency2"
+                  select
+                  label="Select Product"
+                  size="small"
+                  value={selectedProducts.map((product) => product.productId)}
+                  onChange={handleProductIdsChange}
+                  SelectProps={{
+                    multiple: true,
+                  }}
+                  disabled={!selectedShop}
+                >
+                  {productOptions.map((option) => (
+                    <MenuItem key={option.props.value} value={option.props.value}>
+                      {option.props.children}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
 
             <Button onClick={handleOpen} disabled={!selectedShop}>New +</Button>
 
@@ -238,30 +326,28 @@ const currentDate = new Date();
               <TableCell>Product ID</TableCell>
               <TableCell>Product Name</TableCell>
               <TableCell>Unit Price</TableCell>
+              <TableCell>Weight</TableCell>
               <TableCell>Quantity</TableCell>
               <TableCell>Total</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {selectedProducts.map((product) => (
-              <TableRow key={product.productId}>
-                <TableCell>{product.productId}</TableCell>
-                <TableCell>{product.productName}</TableCell>
-                <TableCell>{product.unitPrice}</TableCell>
-                <TableCell>
-                  <input type="number"
-                    value={product.quantity}
-                    onChange={handleQuantityChange(product.productId)}></input>
-                  {/* <TextField
-                    
-                    size="small"
-              id="filled-hidden-label-small"
-              defaultValue="Small"
-                  /> */}
-                </TableCell>
-                <TableCell>{product.total}</TableCell>
-              </TableRow>
-            ))}
+          {selectedProducts.map((product) => (
+                  <TableRow key={product.productId}>
+                    <TableCell>{product.productId}</TableCell>
+                    <TableCell>{product.productName}</TableCell>
+                    <TableCell>{product.unitPrice}</TableCell>
+                    <TableCell>{product.weight}</TableCell>
+                    <TableCell>
+                      <input
+                        type="number"
+                        value={product.quantity}
+                        onChange={handleQuantityChange(product.productId)}
+                      ></input>
+                    </TableCell>
+                    <TableCell>{product.total}</TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -276,8 +362,10 @@ const currentDate = new Date();
               <TextField
               id="outlined"
               type='number'
+              name='discount'
               label="Discount Price"
               size='small'
+              onChange={handlediscountItemAmountChange}
               fullWidth
               disabled={!selectedShop}
             />
@@ -292,7 +380,9 @@ const currentDate = new Date();
                       id="outlined"
                       label="Free Items Price"
                       fullWidth
+                      name='freeItem'
                       size='small'
+                      onChange={handleFreeItemAmountChange}
                       disabled={!selectedShop}
                    />
             </div>
@@ -304,8 +394,10 @@ const currentDate = new Date();
                       type='number'
                       id="outlined"
                       label="Return Items Price"
+                      name='return'
                       fullWidth
                       size='small'
+                      onChange={handleReturnItemAmountChange}
                       disabled={!selectedShop}
                    />
             </div>
@@ -324,6 +416,7 @@ const currentDate = new Date();
               type='number'
               id="outlined"
               label="Cheque Value"
+              name='chequeamount'
               fullWidth
               size='small'
               value={checkAmount !== null ? checkAmount : ''} // Display the check amount or an empty string
@@ -337,20 +430,24 @@ const currentDate = new Date();
                       type='number'
                       id="outlined"
                       label="Creadit Value"
+                      name='creaditamount'
                       fullWidth
                       size='small'
+                      onChange={handleCreditAmountChange}
                       disabled={!selectedShop}
                    />
             </div>
           </div>
-          <div className="form-input">
+          <div className="form-input"> 
           <div className="form-input-product">
                     <TextField
                       type='number'
                       id="outlined"
                       label="Cash Value"
+                      name='cashamount'
                       fullWidth
                       size='small'
+                      onChange={handleCashAmountChange}
                       disabled={!selectedShop}
                    />
             </div>
@@ -362,21 +459,18 @@ const currentDate = new Date();
           <div className="form-input">
           <span className='sub-title' style={{marginBottom:"15px"}}>Total</span>
             <div className="form-input-product">
-              <TextField
-              id="outlined"
-              type='number'
-              label="Total"
-              size='small'
-              fullWidth
-              
-            />
+
+              <div className='total'>
+                <span>{calculateTotal() + freeItemAmount + discountItemAmount + retunItemAmount}</span>
+              </div>
            
+
             </div>
           </div>
           <div className="form-input">
          
             <div className="form-input-product">
-            <Button style={{backgroundColor:"#186bfa",color:'white'}}>Add Sale</Button>
+            <Button style={{backgroundColor:"#186bfa",color:'white'}}onClick={handleAddSale}>Add Sale</Button>
            
             </div>
           </div>
