@@ -20,6 +20,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { alpha, LinearProgress, Button, Dialog, Grow } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
+import { Link } from "react-router-dom";
 function createData(
   id,
   shopId,
@@ -84,7 +85,7 @@ const headCells = [
   { id: "credit", numeric: true, disablePadding: false, label: "Credit Value" },
   { id: "cash", numeric: true, disablePadding: false, label: "Cash Value" },
   { id: "date", numeric: false, disablePadding: false, label: "Date" },
-  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+  // { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 function EnhancedTableHead(props) {
@@ -339,9 +340,12 @@ export const SalesInvoice = () => {
           marginBottom: "20px",
         }}
       >
-        <Button variant="contained" onClick={handleOpen}>
+        <Link to={'/newsale'}>
+        <Button variant="contained">
           Add New Sales Invoice +
         </Button>
+        </Link>
+       
       </div>
       <Dialog
         open={openEdit}
@@ -382,7 +386,7 @@ export const SalesInvoice = () => {
                         tabIndex={-1}
                         key={row.id}
                         style={{ cursor: 'pointer', padding: '0px', height: '50px' }}
-                        onClick={() => handleOpenEdit(row)}
+                      
                       >
                         <TableCell align="left">{row.id}</TableCell>
                         <TableCell align="left">{row.shopId}</TableCell>
@@ -393,7 +397,7 @@ export const SalesInvoice = () => {
                         <TableCell align="right">{row.credit}</TableCell>
                         <TableCell align="right">{row.cash}</TableCell>
                         <TableCell align="left">{row.date}</TableCell>
-                        <TableCell align="left" padding="20px">
+                        {/* <TableCell align="left" padding="20px">
                           <IconButton
                             sx={{ color: "#3498DB" }}
                             aria-label="Edit"
@@ -407,7 +411,7 @@ export const SalesInvoice = () => {
                           >
                             <Delete />
                           </IconButton>
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     );
                   })}

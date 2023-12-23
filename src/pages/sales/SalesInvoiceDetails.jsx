@@ -65,7 +65,7 @@ const headCells = [
   { id: "productName", numeric: false, disablePadding: false, label: "Product Name" },
   { id: "quantity", numeric: true, disablePadding: false, label: "Quantity" },
   { id: "unitPrice", numeric: true, disablePadding: false, label: "Unit Price" },
-  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+  // { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 function EnhancedTableHead(props) {
@@ -196,17 +196,16 @@ export const SalesInvoiceDetails = () => {
       const responseData = response.data;
       console.log(responseData);
   
-      const newRows = responseData.map((data) =>
-      createData(
-        data.id,
-        data.salesInvoice.id,
-        data.salesInvoice.date,
-        data.salesInvoice.shop.shopName, // Access the shopName from shop object
-        data.product.productName,
-        data.quantity,
-        data.unitPrice
-      )
-    );
+    
+      const newRows = responseData.map((data) => ({
+        id: data.id,
+        salesInvoiceId: data.salesInvoice.id,
+        salesDate: data.salesInvoice.date,
+        shop: data.salesInvoice.shop.shopName,
+        productName: data.product.productName,
+        quantity: data.quantity,
+        unitPrice: data.unitPrice
+      }));
   
       setRows(newRows);
     } catch (error) {
@@ -349,7 +348,7 @@ export const SalesInvoiceDetails = () => {
                 tabIndex={-1}
                 key={row.id}
                 style={{ cursor: 'pointer', padding: '0px', height: '50px' }}
-                onClick={() => handleOpenEdit(row)}
+              
               >
                 <TableCell align="left">{row.id}</TableCell>
                 <TableCell align="left">{row.salesInvoiceId}</TableCell>
@@ -358,7 +357,7 @@ export const SalesInvoiceDetails = () => {
                 <TableCell align="left">{row.productName}</TableCell>
                 <TableCell align="right">{row.quantity}</TableCell>
                 <TableCell align="right">{row.unitPrice}</TableCell>
-                <TableCell align="left">
+                {/* <TableCell align="left">
                   <IconButton
                     sx={{ color: "#3498DB" }}
                     aria-label="Edit"
@@ -372,7 +371,7 @@ export const SalesInvoiceDetails = () => {
                   >
                     <Delete />
                   </IconButton>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             );
           })}
