@@ -326,6 +326,7 @@ console.log(responseData)
     setSelectedShop(row);
     setOpenEdit(true);
   };
+  console.log(selectedShop)
   const handleEditClose = () => {
     setOpenEdit(false);
   };
@@ -363,7 +364,7 @@ console.log(responseData)
         TransitionComponent={Grow}
         transitionDuration={500}
       >
-        <EditShop id={selectedShop ? selectedShop.id : null}></EditShop>
+        <EditShop id={selectedShop ? selectedShop.shopId : null}></EditShop>
       
       </Dialog>
       <Paper sx={{ width: "100%", mb: 1 }}>
