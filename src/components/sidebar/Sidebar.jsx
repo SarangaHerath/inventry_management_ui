@@ -111,7 +111,7 @@
 //   );
 // };
 import React, { useState, useEffect } from 'react';
-import { FaTh, FaUserAlt, FaShoppingBag, FaBuilding, FaShoppingBasket, FaFileInvoice, FaMapMarkedAlt } from 'react-icons/fa';
+import { FaTh, FaUserAlt, FaShoppingBag, FaBuilding, FaShoppingBasket, FaFileInvoice, FaMapMarkedAlt, FaDownload, FaSellcast } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import './sidebar.scss';
@@ -128,10 +128,12 @@ export const Sidebar = ({ children }) => {
     { path: '/productList', name: 'Product', icon: <FaShoppingBag style={{ color: 'peru' }} /> },
     { path: '/shopsList', name: 'Shops', icon: <FaBuilding style={{ color: '#239B56' }} /> },
     { path: '/deliveryRoute', name: 'Delivery Routes', icon: <FaMapMarkedAlt style={{ color: '#239B56' }} /> },
+    { path: '/stockOut', name: 'Stock Out', icon: <FaSellcast style={{ color: 'green' }} /> },
     { path: '/newsale', name: 'New Sale', icon: <FaShoppingBasket style={{ color: 'purple' }} /> },
     { path: '/salesInvoice', name: 'Sales Invoice', icon: <FaFileInvoice style={{ color: '#2874A6' }} /> },
     { path: '/salesInvoiceDetails', name: 'Sales Invoice Details', icon: <FaFileInvoice style={{ color: '#2874A6' }} /> },
     { path: '/login', name: 'About', icon: <FaUserAlt style={{ color: 'green' }} /> },
+    
    
   ];
 

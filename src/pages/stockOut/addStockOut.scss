@@ -1,0 +1,33 @@
+// addNewShop.scss
+
+.add-shop-form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+
+  .form-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .textfield {
+    width: 100%;
+    // margin-right: 8px;
+  }
+  .buttonfield {
+    margin-top: 16px;
+  }
+
+  .grid {
+    margin-bottom: 16px;
+  }
+
+  .grid-item {
+    display: flex;
+    gap: 8px;
+  }
+
+  .centered-label {
+    text-align: center;
+  }
+}

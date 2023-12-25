@@ -65,17 +65,22 @@ export const EditShop = (props) => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
+  
+    // Update the deliveryRouteId in formData
+    const updatedFormData = { ...formData, deliveryRouteId: selectedRoute };
+  
     try {
       const response = await axios.put(
         `http://localhost:8080/api/v1/shop/update`,
-        formData
+        updatedFormData
       );
-
+  
       console.log('Shop updated successfully:', response.data);
+  
       handleClose();
       // Redirect to the shop list page or any other page
-      navigate('/shop-list');
+      window.location.reload();
+
     } catch (error) {
       console.error('Error updating shop:', error);
     }
