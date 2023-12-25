@@ -11,24 +11,38 @@ import { CalendarViewDay } from '@mui/icons-material';
 
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import axios from 'axios';
+import { AddDeliveryRoute } from '../deliveryRoute/AddDeliveryRoute';
 
 
 export const NewSales = () => {
+  const [routeOptions, setRouteOptions] = useState([]);
   const [shopOptions, setShopOptions] = useState([]);
   const [productOptions, setProductOptions] = useState([]);
+  const [selectedRoute, setSelectedRoute] = useState(null);
   const [selectedShop, setSelectedShop] = useState(null);
   const [shopDetails, setShopDetails] = useState(null);
-  const [saleData, setSaleData] = useState({
-    customerId: '',
-    productIds: [],
-    paymentMethodId: '',
-    discountId: '',
-  });
-  const fetchShops = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/v1/shop/all");
-      const shopData = response.data;
 
+
+  const fetchDeliveryRoute = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/v1/route/all");
+      const routeData = response.data;
+      const routeOptions = routeData.map((droute) => (
+        <MenuItem key={droute.id} value={droute.id}>
+          {droute.routeName}
+        </MenuItem>
+      ));
+      setRouteOptions(routeOptions);
+    } catch (error) {
+      console.error("Error fetching delivery routes:", error);
+    }
+  };
+  
+  const fetchShops = async (deliveryRouteId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/shop/by-delivery-route/${deliveryRouteId}`);
+      const shopData = response.data;
+      // console.log(deliveryRouteId)
       const shopOptions = shopData.map((shop) => (
         <MenuItem key={shop.shopId} value={shop.shopId}>
           {shop.shopName}
@@ -51,6 +65,12 @@ export const NewSales = () => {
     }
   };
 console.log(shopDetails)
+const handleRouteChange = (event) => {
+  const selectedRouteId = event.target.value;
+  setSelectedRoute(selectedRouteId)
+  fetchShops(selectedRouteId)
+  
+};
   const handleCustomerChange = (event) => {
     const selectedShopId = event.target.value;
     setSelectedShop(selectedShopId)
@@ -58,17 +78,30 @@ console.log(shopDetails)
   };
 
   useEffect(() => {
-    fetchShops();
+    fetchDeliveryRoute();
   }, []);
+  
+  useEffect(() => {
+    if (selectedRoute) {
+      fetchShops(selectedRoute);
+    }
+  }, [selectedRoute]);
+  
+  useEffect(() => {
+    if (selectedShop) {
+      fetchShopDetails(selectedShop);
+    }
+  }, [selectedShop]);
+  
 //////////////////////product/////////////////////////////////////////
 const fetchProduct = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/api/v1/product/all");
+    const response = await axios.get("http://localhost:8080/api/v1/stock-out/all");
     const productData = response.data;
-
+    console.log(productData)
     const productOptions = productData.map((product) => (
-      <MenuItem key={product.productId} value={product.productId}>
-        {product.productName}-{product.weight}g
+      <MenuItem key={product.product.productId} value={product.product.productId}>
+        {product.product.productName}-{product.product.weight}g
       </MenuItem>
     ));
 
@@ -81,62 +114,100 @@ console.log(productOptions)
 useEffect(() => {
   fetchProduct();
 }, []);
+
 const [selectedProducts,setSelectedProducts]=useState([])
-const [productDetails,serProductDetails]=useState([])
 const [quantityValues, setQuantityValues] = useState({});
 const handleProductIdsChange = async (event) => {
   const selectedProductIds = event.target.value;
 
-  const updatedSelectedProducts = selectedProductIds.map(async (productId) => {
-    // Fetch product details for each selected product
-    const productDetailsResponse = await axios.get(`http://localhost:8080/api/v1/product/get-by-id/${productId}`);
-    const productDetailsData = productDetailsResponse.data;
-    console.log(productDetailsResponse)
-    return {
-      productId,
-      productName: productDetailsData.productName,
-      unitPrice: productDetailsData.unitPrice,
-      weight:productDetailsData.weight,
-      quantity: quantityValues[productId] || 0,
-      total: (quantityValues[productId] || 0) * productDetailsData.unitPrice,
-    };
-  });
+  const updatedSelectedProducts = await Promise.all(
+    selectedProductIds.map(async (productId) => {
+      try {
+        const productDetailsResponse = await axios.get(`http://localhost:8080/api/v1/stock-out/product-details/${productId}`);
+        const productDetailsData = productDetailsResponse.data[0]; // Access the first item in the array
+
+        return {
+          productId,
+          productName: productDetailsData.product.productName,
+          unitPrice: productDetailsData.product.unitPrice,
+          weight: productDetailsData.product.weight,
+          quantity: quantityValues[productId] || 0,
+          total: (quantityValues[productId] || 0) * productDetailsData.product.unitPrice,
+        };
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+        return null;
+      }
+    })
+  );
 
   // Update selected products with details
-  setSelectedProducts(await Promise.all(updatedSelectedProducts));
+  setSelectedProducts(updatedSelectedProducts.filter((product) => product !== null));
 };
-const handleQuantityChange = (productId) => (event) => {
+const [quantityErrors, setQuantityErrors] = useState({});
+
+
+const handleQuantityChange = (productId) => async (event) => {
   const newQuantity = parseInt(event.target.value, 10);
 
-  setQuantityValues((prevQuantityValues) => ({
-    ...prevQuantityValues,
-    [productId]: newQuantity,
-  }));
 
-  // Update total value based on quantity
-  const updatedSelectedProducts = selectedProducts.map((product) => {
-    if (product.productId === productId) {
-      return {
-        ...product,
-        quantity: newQuantity,
-        total: newQuantity * product.unitPrice,
-      };
+  try {
+    const productDetailsResponse = await axios.get(`http://localhost:8080/api/v1/stock-out/product-details/${productId}`);
+    const productDetailsData = productDetailsResponse.data[0]; // Access the first item in the array
+    console.log(productDetailsData)
+    // Compare the entered quantity with the available quantity
+    if (newQuantity > productDetailsData.quantity) {
+      // Display an error message
+      setQuantityErrors((prevErrors) => ({
+        ...prevErrors,
+        [productId]: `Available Quantity: ${productDetailsData.quantity}`,
+      }));
+    } else {
+      // Clear the error message
+      setQuantityErrors((prevErrors) => ({
+        ...prevErrors,
+        [productId]: null,
+      }));
+
+      // Update state and total value based on quantity
+      setQuantityValues((prevQuantityValues) => ({
+        ...prevQuantityValues,
+        [productId]: newQuantity,
+      }));
+
+      const updatedSelectedProducts = selectedProducts.map((product) => {
+        if (product.productId === productId) {
+          return {
+            ...product,
+            quantity: newQuantity,
+            total: newQuantity * product.unitPrice,
+          };
+        }
+        return product;
+      });
+
+      setSelectedProducts(updatedSelectedProducts);
     }
-    return product;
-  });
-
-  setSelectedProducts(updatedSelectedProducts);
+  } catch (error) {
+    console.error("Error fetching product details:", error);
+  }
 };
+
+
 
 
 ///////////////////////////////////////////////////////////////////
   const [open, setOpen] = useState(false);
+  const [openRoute, setOpenRoute] = useState(false);
   const [openShop, setOpenShop] = useState(false);
   const [openCheque, setOpenCheque] = useState(false);
   const [checkAmount, setCheckAmount] = useState(null);
 
 const handleOpen = () => {
   setOpen(true);
+};
+const handleOpenRoute = () => {
+  setOpenRoute(true);
 };
 const handleOpenShop = () => {
   setOpenShop(true);
@@ -148,6 +219,7 @@ const handleClose = () => {
   setOpen(false);
   setOpenShop(false);
   setOpenCheque(false)
+  setOpenRoute(false)
 };
 
 const handleCloseCheque = (checkAmount) => {
@@ -211,7 +283,8 @@ const currentDate = new Date();
     try {
       const saleData = {
         shopId: selectedShop,
-        total: calculateTotal() + freeItemAmount + discountItemAmount + retunItemAmount,
+        deliveryRouteId:selectedRoute,
+        total: calculateTotal(),
         returnValue: retunItemAmount,
         date: formattedDate,
         freeItems: freeItemAmount,
@@ -254,6 +327,23 @@ const currentDate = new Date();
           {/* First input field with button */}
           <div className="form-input">
             <div className='form-input-customer'>
+            {routeOptions && (
+        <TextField
+          id="outlined-select-currency1"
+          select
+          label="Select Delivery Route"
+          defaultValue=""
+          size="small"
+          value={selectedRoute}
+          onChange={handleRouteChange}
+        >
+          {routeOptions.map((option) => (
+            <MenuItem key={option.props.value} value={option.props.value}>
+              {option.props.children}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}      <Button onClick={handleOpenRoute} variant="outlined">New +</Button>
             {shopOptions && (
         <TextField
           id="outlined-select-currency1"
@@ -262,6 +352,7 @@ const currentDate = new Date();
           defaultValue=""
           size="small"
           value={selectedShop}
+          disabled={!selectedRoute}
           onChange={handleCustomerChange}
         >
           {shopOptions.map((option) => (
@@ -272,7 +363,7 @@ const currentDate = new Date();
         </TextField>
       )}
 
-      <Button onClick={handleOpenShop}>New +</Button>
+      <Button onClick={handleOpenShop}disabled={!selectedRoute} variant="outlined">New +</Button>
             </div>
             {selectedShop && shopDetails && (
   <div className='customer-details'>
@@ -288,6 +379,7 @@ const currentDate = new Date();
           {/* Second input field with button */}
           <div className="form-input">
             <div className="form-input-product">
+              
             {productOptions && (
                 <TextField
                   id="outlined-select-currency2"
@@ -299,7 +391,8 @@ const currentDate = new Date();
                   SelectProps={{
                     multiple: true,
                   }}
-                  disabled={!selectedShop}
+                  
+                  disabled={!selectedRoute}
                 >
                   {productOptions.map((option) => (
                     <MenuItem key={option.props.value} value={option.props.value}>
@@ -309,7 +402,7 @@ const currentDate = new Date();
                 </TextField>
               )}
 
-            <Button onClick={handleOpen} disabled={!selectedShop}>New +</Button>
+            <Button onClick={handleOpen} disabled={!selectedShop} variant="outlined">New +</Button>
 
                 </div>
             <div className='product-details'>
@@ -339,11 +432,18 @@ const currentDate = new Date();
                     <TableCell>{product.unitPrice}</TableCell>
                     <TableCell>{product.weight}</TableCell>
                     <TableCell>
+                      <div>
                       <input
                         type="number"
                         value={product.quantity}
                         onChange={handleQuantityChange(product.productId)}
                       ></input>
+                       {quantityErrors[product.productId] && (
+                        <span className="error-message">{quantityErrors[product.productId]}</span>
+                      )}
+                      </div>
+                      
+                      
                     </TableCell>
                     <TableCell>{product.total}</TableCell>
                   </TableRow>
@@ -367,7 +467,8 @@ const currentDate = new Date();
               size='small'
               onChange={handlediscountItemAmountChange}
               fullWidth
-              disabled={!selectedShop}
+              
+          disabled={!selectedRoute}
             />
            
             </div>
@@ -383,7 +484,7 @@ const currentDate = new Date();
                       name='freeItem'
                       size='small'
                       onChange={handleFreeItemAmountChange}
-                      disabled={!selectedShop}
+          disabled={!selectedRoute}
                    />
             </div>
           </div>
@@ -398,7 +499,8 @@ const currentDate = new Date();
                       fullWidth
                       size='small'
                       onChange={handleReturnItemAmountChange}
-                      disabled={!selectedShop}
+             
+                      disabled={!selectedRoute}
                    />
             </div>
           </div>
@@ -434,7 +536,7 @@ const currentDate = new Date();
                       fullWidth
                       size='small'
                       onChange={handleCreditAmountChange}
-                      disabled={!selectedShop}
+                      disabled={!selectedRoute}
                    />
             </div>
           </div>
@@ -448,7 +550,7 @@ const currentDate = new Date();
                       fullWidth
                       size='small'
                       onChange={handleCashAmountChange}
-                      disabled={!selectedShop}
+                      disabled={!selectedRoute}
                    />
             </div>
           </div>
@@ -461,7 +563,7 @@ const currentDate = new Date();
             <div className="form-input-product">
 
               <div className='total'>
-                <span>{calculateTotal() + freeItemAmount + discountItemAmount + retunItemAmount}</span>
+                <span>{calculateTotal()}</span>
               </div>
            
 
@@ -476,6 +578,10 @@ const currentDate = new Date();
           </div>
           </div>
       </div>
+      <Dialog open={openRoute} onClose={handleClose}TransitionComponent={Grow}
+        transitionDuration={500} >
+        <AddDeliveryRoute></AddDeliveryRoute>
+    </Dialog>
       <Dialog open={open} onClose={handleClose}TransitionComponent={Grow}
         transitionDuration={500} >
         <AddNewProducts></AddNewProducts>
