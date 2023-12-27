@@ -9,7 +9,7 @@ export const AddNewShop = () => {
     shopName: '',
     address: '',
     phoneNumber: '',
-    delivery_route_id: ''
+    deliveryRouteId: ''
   });
 
   const [deliveryRoutes, setDeliveryRoutes] = useState([]);
@@ -51,7 +51,7 @@ export const AddNewShop = () => {
         shopName: '',
         address: '',
         phoneNumber: '',
-        delivery_route_id: '',
+        deliveryRouteId: '',
       });
     } catch (error) {
       // Handle error, e.g., show an error message
@@ -118,8 +118,8 @@ export const AddNewShop = () => {
             <Select
               labelId="delivery-route-label"
               id="delivery-route"
-              name="delivery_route_id"
-              value={formData.delivery_route_id}
+              name="deliveryRouteId"
+              value={formData.deliveryRouteId}
               onChange={handleInputChange}
               label="Delivery Route"
               size="small"
