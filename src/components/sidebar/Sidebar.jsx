@@ -24,7 +24,7 @@
 //       path: '/',
 //       name: 'Dashboard',
 //       icon: <FaTh style={{ color: 'blue'}} />,
-     
+
 //     },
 //     {
 //       path: '/productList',
@@ -94,7 +94,7 @@
 //                 {item.submenu.map((subItem, subIndex) => (
 //                   <NavLink key={subIndex} to={subItem.path} className="link" activeClassName="active" width="10px"fontSize="12px">
 //                     <RadioButtonUnchecked className="MenuOpenIcon" onClick={toggle} />
-                   
+
 //                     <div className="link_text"style={{fontSize:'12px'}}>{subItem.name}</div>
 //                   </NavLink>
 //                 ))}
@@ -143,7 +143,7 @@
 //     { path: '/salesInvoice', name: 'Sales Invoice', icon: <FaFileInvoice style={{ color: '#2874A6' }} /> },
 //     { path: '/salesInvoiceDetails', name: 'Sales Invoice Details', icon: <FaFileInvoice style={{ color: '#2874A6' }} /> },
 //     { path: '/login', name: 'About', icon: <FaUserAlt style={{ color: 'green' }} /> },
-   
+
 //   ];
 
 //   useEffect(() => {
@@ -202,7 +202,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { FaTh, FaUserAlt, FaShoppingBag, FaBuilding, FaShoppingBasket, FaFileInvoice, FaMapMarkedAlt, FaDownload, FaSellcast, FaMoneyCheck } from 'react-icons/fa';
-import { FaTh, FaUserAlt, FaShoppingBag, FaBuilding, FaShoppingBasket, FaFileInvoice, FaMapMarkedAlt, FaDownload, FaSellcast, FaMoneyCheck, FaAccessibleIcon, FaBullseye } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import './sidebar.scss';
@@ -219,7 +218,7 @@ export const Sidebar = ({ children }) => {
   const toggleMainMenu = () => {
     setIsMainMenuOpen(!isMainMenuOpen);
   };
-  
+
   const toggleSubMenu = (index) => {
     setExpandedMenus((prev) => ({
       ...prev,
@@ -238,16 +237,17 @@ export const Sidebar = ({ children }) => {
     { path: '/newsale', name: 'New Sale', icon: <FaShoppingBasket style={{ color: 'purple' }} /> },
     { path: '/salesInvoice', name: 'Sales Invoice', icon: <FaFileInvoice style={{ color: '#2874A6' }} /> },
     { path: '/salesInvoiceDetails', name: 'Sales Invoice Details', icon: <FaFileInvoice style={{ color: '#2874A6' }} /> },
-    { path: '/chequeDetails', name: 'Payment Details', icon: <FaMoneyCheck style={{ color: '#2874A6' }} /> ,
-        submenu: [
-              { path: '/chequeDetails', name: 'Cheque Lists' },
-              { path: '/creaditlist', name: 'Creadit List'},
-             
-            ],
+    {
+      path: '/chequeDetails', name: 'Payment Details', icon: <FaMoneyCheck style={{ color: '#2874A6' }} />,
+      submenu: [
+        { path: '/chequeDetails', name: 'Cheque Lists' },
+        { path: '/creaditlist', name: 'Creadit List' },
+
+      ],
     },
     { path: '/login', name: 'About', icon: <FaUserAlt style={{ color: 'green' }} /> },
-    
-   
+
+
   ];
 
   useEffect(() => {
