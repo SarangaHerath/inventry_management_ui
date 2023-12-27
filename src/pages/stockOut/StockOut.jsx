@@ -24,17 +24,17 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { Button, Dialog, Grow, LinearProgress, colors } from "@mui/material";
 import { Link } from "react-router-dom";
-import { AddNewShop } from "./AddNewShop";
 import { Delete, Edit } from "@mui/icons-material";
-import { EditShop } from "./EditShop";
+import { AddStockOut } from "./AddStockOut";
+import { EditStockOut } from "./EditStockOut";
 
-function createData(shopId, delivery_route_id, shopName, address, phoneNumber) {
+function createData(stockOutId, product_id, vehicle_id, quantity, date_out) {
   return {
-    shopId,
-    delivery_route_id,
-    shopName,
-    address,
-    phoneNumber,
+    stockOutId,
+    product_id,
+    vehicle_id,
+    quantity,
+    date_out,
   };
 }
 
@@ -66,34 +66,34 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "shopId",
+    id: "stockOutId",
     numeric: false,
     disablePadding: false,
-    label: "Shop Id",
+    label: "Stock Out Id",
   },
   {
-    id: "delivery_route_id",
+    id: "product_id",
     numeric: false,
     disablePadding: false,
-    label: "Delivery Route Name",
+    label: "Product Name",
   },
   {
-    id: "shopName",
+    id: "vehicle_id",
     numeric: false,
     disablePadding: false,
-    label: "Shop Name",
+    label: "Vehicle Number",
   },
   {
-    id: "address",
+    id: "quantity",
     numeric: false,
     disablePadding: false,
-    label: "Address",
+    label: "Quantity",
   },
   {
-    id: "phoneNumber",
+    id: "date_out",
     numeric: false,
     disablePadding: false,
-    label: "Phone Number",
+    label: "Date",
   },
   {
     id: "action",
@@ -119,7 +119,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-     
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -188,7 +187,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Shop List
+          Stock Out List
         </Typography>
       )}
 
@@ -212,7 +211,7 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-export const Shop = () => {
+export const StockOut = () => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("unitPrice");
   const [selected, setSelected] = React.useState([]);
@@ -220,25 +219,34 @@ export const Shop = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
-  const [selectedShop, setSelectedShop] = React.useState(null);
+  const [selectedStockOut, setselectedStockOut] = React.useState(null);
   const [openedit, setOpenEdit] = React.useState(false);
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/shop/all"
+          "http://localhost:8080/api/v1/stock-out/all"
         );
         const responseData = response.data;
-console.log(responseData)
-        const newRows = responseData.map((data) =>
-          createData(
-            data.shopId,
-            data.deliveryRoute?.routeName || 'please select route', 
-            data.shopName,
-            data.address,
-            data.phoneNumber
-          )
-        );
+        console.log(responseData);
+        const newRows = (responseData || []).map((data) => {
+          if (!data) {
+            console.log('Debugging: data is null', data);
+            return null;
+          }
+        
+          console.log('Debugging: data is', data);
+        
+          return createData(
+            data.stockOutId,
+            data.product.productName            , // Add null check for nested properties
+            data.vehicle.vehicleNumber, // Add null check for nested properties
+            data.quantity,
+            data.dateOut
+          );
+        });
+        
+
         console.log(newRows);
         setRows(newRows);
       } catch (error) {
@@ -257,13 +265,12 @@ console.log(responseData)
   const handleDelete = async (id) => {
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`http://localhost:8080/api/v1/shop/delete/${id}`);
+      await axios.delete(`http://localhost:8080/api/v1/stock-out/delete/${id}`);
 
       // Update the state to reflect the changes (remove the deleted row)
-    // Inside handleDelete function
-    const updatedRows = rows.filter((row) => row.shopId !== id);
-    setRows(updatedRows);
-
+      // Inside handleDelete function
+      const updatedRows = rows.filter((row) => row.stockOutId !== id);
+      setRows(updatedRows);
 
       // Clear the selected items
       setSelected([]);
@@ -323,14 +330,14 @@ console.log(responseData)
     setOpen(false);
   };
   const handleOpenEdit = (row) => {
-    setSelectedShop(row);
+    setselectedStockOut(row);
     setOpenEdit(true);
   };
- 
+
   const handleEditClose = () => {
     setOpenEdit(false);
   };
-
+  // const formattedDate = new Date(data.date_out).toLocaleDateString();
   const handleAddProduct = async () => {
     // Add logic to handle adding a product
     // ...
@@ -347,7 +354,7 @@ console.log(responseData)
         }}
       >
         <Button variant="contained" onClick={handleOpen}>
-          Add New Shop +{" "}
+          Add Stock Out +{" "}
         </Button>
       </div>
       <Dialog
@@ -356,7 +363,7 @@ console.log(responseData)
         TransitionComponent={Grow}
         transitionDuration={500}
       >
-        <AddNewShop></AddNewShop>
+        <AddStockOut/>
       </Dialog>
       <Dialog
         open={openedit}
@@ -364,8 +371,7 @@ console.log(responseData)
         TransitionComponent={Grow}
         transitionDuration={500}
       >
-        <EditShop id={selectedShop ? selectedShop.shopId : null}></EditShop>
-      
+        <EditStockOut id={selectedStockOut?selectedStockOut.stockOutId:null}/>
       </Dialog>
       <Paper sx={{ width: "100%", mb: 1 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -388,42 +394,42 @@ console.log(responseData)
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    
                     const labelId = `enhanced-table-checkbox-${index}`;
                     const uniqueKey = `row-${row.id}`;
                     return (
                       <TableRow
+                        key={uniqueKey}
                         hover
                         tabIndex={-1}
-                        key={uniqueKey}
-                        style={{ cursor: 'pointer', padding: '0px', height: '50px' }}
-                     
+                        style={{
+                          cursor: "pointer",
+                          padding: "0px",
+                          height: "50px",
+                        }}
                       >
-                    
-
-                        <TableCell align="left">{row.shopId}</TableCell>
+                        <TableCell align="left">{row.stockOutId}</TableCell>
+                        <TableCell align="left">{row.product_id}</TableCell>
+                        <TableCell align="left">{row.vehicle_id}</TableCell>
+                        <TableCell align="left">{row.quantity}</TableCell>
                         <TableCell align="left">
-                          {row.delivery_route_id}
+                          {row.date_out || "N/A"}
                         </TableCell>
-                        <TableCell align="left">{row.shopName}</TableCell>
-                        <TableCell align="left">{row.address}</TableCell>
-                        <TableCell align="left">{row.phoneNumber}</TableCell>
-                        <TableCell align="left" padding="20px"><IconButton
-                          sx={{color:'#3498DB'}}
-                              aria-label="Edit"
-                              onClick={() => handleOpenEdit(row)} // Pass the row to handleOpenEdit
-                  >
-                            
-                              <Edit />
-                            </IconButton>
-                            <IconButton
-                          
-                              aria-label="Delete"
-                              onClick={() => handleDelete(row.shopId)}
-                              sx={{color:'#E74C3C'}}
-                            >
-                              <Delete />
-                            </IconButton></TableCell>
+                        <TableCell align="left" padding="20px">
+                          <IconButton
+                            sx={{ color: "#3498DB" }}
+                            aria-label="Edit"
+                            onClick={() => handleOpenEdit(row)} // Pass the row to handleOpenEdit
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton
+                            aria-label="Delete"
+                            onClick={() => handleDelete(row.stockOutId)}
+                            sx={{ color: "#E74C3C" }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                     );
                   })}

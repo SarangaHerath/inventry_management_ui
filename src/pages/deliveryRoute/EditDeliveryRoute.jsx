@@ -42,7 +42,7 @@ export const EditDeliveryRoute = (props) => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
+    console.log('Request Body:', formData);
     try {
       const response = await axios.put(
         `http://localhost:8080/api/v1/route/update`,

@@ -202,6 +202,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { FaTh, FaUserAlt, FaShoppingBag, FaBuilding, FaShoppingBasket, FaFileInvoice, FaMapMarkedAlt, FaDownload, FaSellcast, FaMoneyCheck } from 'react-icons/fa';
+import { FaTh, FaUserAlt, FaShoppingBag, FaBuilding, FaShoppingBasket, FaFileInvoice, FaMapMarkedAlt, FaDownload, FaSellcast, FaMoneyCheck, FaAccessibleIcon, FaBullseye } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import './sidebar.scss';
@@ -308,7 +309,7 @@ export const Sidebar = ({ children }) => {
               <div className="submenu" style={{ marginLeft: '50px', fontSize: '12px' }}>
                 {item.submenu.map((subItem, subIndex) => (
                   <NavLink key={subIndex} to={subItem.path} className="link" activeClassName="active">
-                    <RadioButtonUnchecked className="MenuOpenIcon" onClick={toggle} />
+                    <FaBullseye className="MenuOpenIcon" onClick={toggle} />
                     <div className="link_text" style={{ fontSize: '12px' }}>
                       {subItem.name}
                     </div>
