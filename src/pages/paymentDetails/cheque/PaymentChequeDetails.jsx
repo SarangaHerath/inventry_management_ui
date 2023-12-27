@@ -24,17 +24,24 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { Button, Dialog, Grow, LinearProgress, colors } from "@mui/material";
 import { Link } from "react-router-dom";
-import { AddNewShop } from "./AddNewShop";
 import { Delete, Edit } from "@mui/icons-material";
-import { EditShop } from "./EditShop";
+import { EditPaymentCheque } from "./EditPaymentCheque";
 
-function createData(shopId, delivery_route_id, shopName, address, phoneNumber) {
+function createData(
+  chequeId,
+  shopId,
+  chequeNumber,
+  receivedDate,
+  bankDate,
+  amount
+) {
   return {
+    chequeId,
     shopId,
-    delivery_route_id,
-    shopName,
-    address,
-    phoneNumber,
+    chequeNumber,
+    receivedDate,
+    bankDate,
+    amount,
   };
 }
 
@@ -66,40 +73,40 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
+    id: "id",
+    numeric: false,
+    disablePadding: false,
+    label: "Cheque Id",
+  },
+  {
     id: "shopId",
-    numeric: false,
-    disablePadding: false,
-    label: "Shop Id",
-  },
-  {
-    id: "delivery_route_id",
-    numeric: false,
-    disablePadding: false,
-    label: "Delivery Route Name",
-  },
-  {
-    id: "shopName",
     numeric: false,
     disablePadding: false,
     label: "Shop Name",
   },
   {
-    id: "address",
+    id: "chequeNumber",
     numeric: false,
     disablePadding: false,
-    label: "Address",
+    label: "Cheque Number",
   },
   {
-    id: "phoneNumber",
+    id: "receivedDate",
     numeric: false,
     disablePadding: false,
-    label: "Phone Number",
+    label: "Received Date",
   },
   {
-    id: "action",
+    id: "bankDate",
     numeric: false,
     disablePadding: false,
-    label: "Actions",
+    label: "Bank Date",
+  },
+  {
+    id: "amount",
+    numeric: false,
+    disablePadding: false,
+    label: "Amount",
   },
 ];
 
@@ -119,7 +126,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-     
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -188,7 +194,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Shop List
+           Cheque List
         </Typography>
       )}
 
@@ -212,7 +218,7 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-export const Shop = () => {
+export const PaymentChequeDetails = () => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("unitPrice");
   const [selected, setSelected] = React.useState([]);
@@ -220,25 +226,34 @@ export const Shop = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
-  const [selectedShop, setSelectedShop] = React.useState(null);
+  const [selectedCheque, setselectedCheque] = React.useState(null);
   const [openedit, setOpenEdit] = React.useState(false);
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/shop/all"
+          "http://localhost:8080/api/v1/cheque/getAll"
         );
         const responseData = response.data;
-console.log(responseData)
-        const newRows = responseData.map((data) =>
-          createData(
-            data.shopId,
-            data.deliveryRoute?.routeName || 'please select route', 
-            data.shopName,
-            data.address,
-            data.phoneNumber
-          )
-        );
+        console.log(responseData);
+        const newRows = (responseData || []).map((data) => {
+          if (!data) {
+            console.log("Debugging: data is null", data);
+            return null;
+          }
+
+          console.log("Debugging: data is", data);
+
+          return createData(
+            data.chequeId,
+            data.shop.shopName, // Add null check for nested properties
+            data.chequeNumber, // Add null check for nested properties
+            data.receivedDate,
+            data.bankDate,
+            data.amount
+          );
+        });
+
         console.log(newRows);
         setRows(newRows);
       } catch (error) {
@@ -254,16 +269,17 @@ console.log(responseData)
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  const handleDelete = async (id) => {
+  const handleDelete = async (chequeId) => {
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`http://localhost:8080/api/v1/shop/delete/${id}`);
+      await axios.delete(
+        `http://localhost:8080/api/v1/cheque/delete/${chequeId}`
+      );
 
       // Update the state to reflect the changes (remove the deleted row)
-    // Inside handleDelete function
-    const updatedRows = rows.filter((row) => row.shopId !== id);
-    setRows(updatedRows);
-
+      // Inside handleDelete function
+      const updatedRows = rows.filter((row) => row.chequeId !== chequeId);
+      setRows(updatedRows);
 
       // Clear the selected items
       setSelected([]);
@@ -271,6 +287,7 @@ console.log(responseData)
       console.error("Error deleting data:", error);
     }
   };
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
@@ -323,14 +340,14 @@ console.log(responseData)
     setOpen(false);
   };
   const handleOpenEdit = (row) => {
-    setSelectedShop(row);
+    setselectedCheque(row);
     setOpenEdit(true);
   };
- 
+
   const handleEditClose = () => {
     setOpenEdit(false);
   };
-
+  // const formattedDate = new Date(data.date_out).toLocaleDateString();
   const handleAddProduct = async () => {
     // Add logic to handle adding a product
     // ...
@@ -345,27 +362,16 @@ console.log(responseData)
           justifyContent: "flex-end",
           marginBottom: "20px",
         }}
-      >
-        <Button variant="contained" onClick={handleOpen}>
-          Add New Shop +{" "}
-        </Button>
-      </div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Grow}
-        transitionDuration={500}
-      >
-        <AddNewShop></AddNewShop>
-      </Dialog>
+      ></div>
       <Dialog
         open={openedit}
         onClose={handleEditClose}
         TransitionComponent={Grow}
         transitionDuration={500}
       >
-        <EditShop id={selectedShop ? selectedShop.shopId : null}></EditShop>
-      
+        <EditPaymentCheque
+          id={selectedCheque ? selectedCheque.chequeId : null}
+        />
       </Dialog>
       <Paper sx={{ width: "100%", mb: 1 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -388,42 +394,45 @@ console.log(responseData)
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    
                     const labelId = `enhanced-table-checkbox-${index}`;
-                    const uniqueKey = `row-${row.id}`;
+                    const uniqueKey = `row-${row.chequeId}`; // Use chequeId as a unique key
                     return (
                       <TableRow
+                        key={uniqueKey}
                         hover
                         tabIndex={-1}
-                        key={uniqueKey}
-                        style={{ cursor: 'pointer', padding: '0px', height: '50px' }}
-                     
+                        style={{
+                          cursor: "pointer",
+                          padding: "0px",
+                          height: "50px",
+                        }}
                       >
-                    
-
+                        <TableCell align="left">{row.chequeId}</TableCell>
                         <TableCell align="left">{row.shopId}</TableCell>
+                        <TableCell align="left">{row.chequeNumber}</TableCell>
                         <TableCell align="left">
-                          {row.delivery_route_id}
+                          {row.receivedDate || "N/A"}
                         </TableCell>
-                        <TableCell align="left">{row.shopName}</TableCell>
-                        <TableCell align="left">{row.address}</TableCell>
-                        <TableCell align="left">{row.phoneNumber}</TableCell>
-                        <TableCell align="left" padding="20px"><IconButton
-                          sx={{color:'#3498DB'}}
-                              aria-label="Edit"
-                              onClick={() => handleOpenEdit(row)} // Pass the row to handleOpenEdit
-                  >
-                            
-                              <Edit />
-                            </IconButton>
-                            <IconButton
-                          
-                              aria-label="Delete"
-                              onClick={() => handleDelete(row.shopId)}
-                              sx={{color:'#E74C3C'}}
-                            >
-                              <Delete />
-                            </IconButton></TableCell>
+                        <TableCell align="left">
+                          {row.bankDate || "N/A"}
+                        </TableCell>
+                        <TableCell align="left">{row.amount}</TableCell>
+                        <TableCell align="left" padding="20px">
+                          <IconButton
+                            sx={{ color: "#3498DB" }}
+                            aria-label="Edit"
+                            onClick={() => handleOpenEdit(row)}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton
+                            aria-label="Delete"
+                            onClick={() => handleDelete(row.chequeId)} // Use chequeId here
+                            sx={{ color: "#E74C3C" }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                     );
                   })}
