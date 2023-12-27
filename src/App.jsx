@@ -18,6 +18,8 @@ import { SalesInvoiceDetails } from "./pages/sales/SalesInvoiceDetails";
 import { DeliveryRoute } from "./pages/deliveryRoute/DeliveryRoute";
 import { NewSales } from "./pages/sales/NewSales";
 import { StockOut } from "./pages/stockOut/StockOut";
+import { ChequeDetails } from "./components/chequeDetails/ChequeDetails";
+import { PaymentChequeDetails } from "./pages/paymentDetails/cheque/PaymentChequeDetails";
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
                 <Route path="/newsale" element={<NewSales />} />
                 <Route path="/salesInvoice" element={<SalesInvoice />} />
                 <Route path="/salesInvoiceDetails" element={<SalesInvoiceDetails />} />
+                <Route path="/chequeDetails" element={<PaymentChequeDetails />} />
                 <Route path="/addNewShop" element={<AddNewShop />} />
                 {/* Add other protected routes here */}
               </Routes>

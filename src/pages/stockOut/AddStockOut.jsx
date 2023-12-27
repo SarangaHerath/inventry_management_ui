@@ -29,7 +29,7 @@ export const AddStockOut = () => {
           "http://localhost:8080/api/v1/product/all"
         );
         const productdetails = response.data;
-
+console.log(productdetails)
         // Update the state with the fetched delivery routes
         setProduct(productdetails);
       } catch (error) {
@@ -121,7 +121,7 @@ export const AddStockOut = () => {
                   key={productdetails.productId}
                   value={productdetails.productId}
                 >
-                  {productdetails.productName}
+                  {productdetails.productName}::{productdetails.weight}::{productdetails.unitPrice}Rs
                 </MenuItem>
               ))}
             </Select>
