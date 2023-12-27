@@ -2,19 +2,19 @@ import React, { useState, useEffect } from "react";
 import { TextField, Button, MenuItem } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./EditPaymentCheque.scss";
+import "./EditPaymentCredit.scss";
 
-export const EditPaymentCheque = (props) => {
+export const EditPaymentCredit = (props) => {
   const { id } = props;
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    chequeId: "",
+    creditId: "",
     shopId: "",
-    chequeNumber: "",
-    receivedDate: "",
-    bankDate: "",
-    amount: "",
+    creditAmount: "",
+    billDate: "",
+    paidAmount: "",
+    lastPaymentDate: "",
   });
 
   const [open, setOpen] = useState(false);
@@ -29,17 +29,23 @@ export const EditPaymentCheque = (props) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/v1/cheque/getById/${id}`
+          `http://localhost:8080/api/v1/credit/getById/${id}`
         );
-        const { chequeId,shopId,chequeNumber,receivedDate,bankDate,amount } =
-          response.data || {};
-        setFormData({
-          chequeId,
+        const {
+          creditId,
           shopId,
-          chequeNumber,
-          receivedDate,
-          bankDate,
-          amount,
+          creditAmount,
+          billDate,
+          paidAmount,
+          lastPaymentDate,
+        } = response.data || {};
+        setFormData({
+          creditId,
+          shopId,
+          creditAmount,
+          billDate,
+          paidAmount,
+          lastPaymentDate,
         });
         console.log(response.data);
         setSelectedShop(shopId);
@@ -75,7 +81,6 @@ export const EditPaymentCheque = (props) => {
       setShopOptions,
       "shopName"
     );
-   
   }, []);
 
   const handleSelectChange = (event, setSelectState, setFormState, key) => {
@@ -98,17 +103,17 @@ export const EditPaymentCheque = (props) => {
 
     const updatedFormData = {
       ...formData,
-      chequeId: id,
+      creditId: id,
       shopId: selectedshop,
     };
 
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/v1/cheque/update`,
+        `http://localhost:8080/api/v1/credit/updateCredit`,
         updatedFormData
       );
 
-      console.log("Cheque updated successfully:", response.data);
+      console.log("Credit updated successfully:", response.data);
 
       handleClose();
       window.location.reload();
@@ -123,9 +128,9 @@ export const EditPaymentCheque = (props) => {
         <div>
           <TextField
             variant="outlined"
-            label="Cheque ID"
-            name="chequeId"
-            value={formData.chequeId}
+            label="Credit ID"
+            name="creditId"
+            value={formData.creditId}
             InputProps={{ readOnly: true }}
             fullWidth
             margin="normal"
@@ -141,7 +146,7 @@ export const EditPaymentCheque = (props) => {
           InputProps={{ readOnly: true }}
           size="small"
           name="shopId"
-          value={formData.shopId}
+          value={selectedshop}
           onChange={(e) =>
             handleSelectChange(e, setSelectedShop, setFormData, "shopId")
           }
@@ -149,67 +154,66 @@ export const EditPaymentCheque = (props) => {
           {shopOptions}
         </TextField>
 
+        <div>
+          <TextField
+            variant="outlined"
+            label="Credit Amount"
+            name="creditAmount"
+            value={formData.creditAmount}
+            InputProps={{ readOnly: true }}
+            onChange={(e) =>
+              setFormData({ ...formData, creditAmount: e.target.value })
+            }
+            required
+            fullWidth
+            margin="normal"
+            size="small"
+          />
+          <TextField
+            variant="outlined"
+            label="Paid Amount"
+            name="paidAmount"
+            value={formData.paidAmount}
+            onChange={(e) =>
+              setFormData({ ...formData, paidAmount: e.target.value })
+            }
+            required
+            fullWidth
+            margin="normal"
+            size="small"
+          />
+        </div>
 
         <div>
           <TextField
             variant="outlined"
-            label="ChequeNumber"
-            name="chequeNumber"
-            value={formData.chequeNumber}
+            label="Bill Date"
+            type="date"
+            name="billDate"
+            value={formData.billDate}
             onChange={(e) =>
-              setFormData({ ...formData, chequeNumber: e.target.value })
+              setFormData({ ...formData, billDate: e.target.value })
             }
             required
-            fullWidth
-            margin="normal"
+            className="textfield"
             size="small"
           />
-<TextField
+          <TextField
             variant="outlined"
-            label="Amount"
-            name="amount"
-            value={formData.amount}
+            label="Last Payment Date"
+            type="date"
+            name="lastPaymentDate"
+            value={formData.lastPaymentDate}
             onChange={(e) =>
-              setFormData({ ...formData, amount: e.target.value })
+              setFormData({ ...formData, lastPaymentDate: e.target.value })
             }
             required
-            fullWidth
-            margin="normal"
+            className="textfield"
             size="small"
           />
-          
         </div>
- 
- <div>
- <TextField
-            variant="outlined"
-            label="Receved Date"
-            type="date"
-            name="recevedDate"
-            value={formData.receivedDate}
-            onChange={(e) =>
-              setFormData({ ...formData, receivedDate: e.target.value })
-            }
-            required
-            className="textfield"
-            size="small"
-          />
- <TextField
-            variant="outlined"
-            label="Bank Date"
-            type="date"
-            name="bankDate"
-            value={formData.bankDate}
-            onChange={(e) =>
-              setFormData({ ...formData, bankDate: e.target.value })
-            }
-            required
-            className="textfield"
-            size="small"
-          />
- </div>
         <Button type="submit" variant="contained" color="primary">
-          Update Cheque
+          Update Credit
         </Button>
       </form>
     </div>
