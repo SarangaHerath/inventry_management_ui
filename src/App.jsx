@@ -17,6 +17,7 @@ import { SalesInvoice } from "./pages/sales/SalesInvoice";
 import { SalesInvoiceDetails } from "./pages/sales/SalesInvoiceDetails";
 import { DeliveryRoute } from "./pages/deliveryRoute/DeliveryRoute";
 import { NewSales } from "./pages/sales/NewSales";
+import { ProductCategory } from "./pages/productsCategory/ProductCategory";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Navigate to="/dashboard" />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/productCategory" element={<ProductCategory />} />
                 <Route path="/productList" element={<Products />} />
                 <Route path="/shopsList" element={<Shop />} />
                 <Route path="/deliveryRoute" element={<DeliveryRoute />} />
