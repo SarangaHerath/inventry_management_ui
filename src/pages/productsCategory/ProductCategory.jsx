@@ -24,15 +24,15 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { Button, Dialog, Grow, LinearProgress } from "@mui/material";
 import { Link } from "react-router-dom";
-import { AddDeliveryRoute } from "./AddDeliveryRoute";
+import { AddProductCategory } from "./AddProductCategory";
 import { Delete, Edit, Update } from "@mui/icons-material";
-import { EditDeliveryRoute } from "./EditDeliveryRoute";
-EditDeliveryRoute
+import { EditProductCategory } from "./EditProductCategory";
 
-function createData(id, routeName) {
+
+function createData(categoryId, categoryName) {
   return {
-    id,
-    routeName,
+    categoryId,
+    categoryName,
   };
 }
 
@@ -65,16 +65,16 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "id",
+    id: "categoryId",
     numeric: false,
     disablePadding: false,
-    label: "Id",
+    label: "Category Id",
   },
   {
-    id: "routeName",
+    id: "categoryName",
     numeric: false,
     disablePadding: false,
-    label: "Route Name",
+    label: "Category Name",
   },
   {
     id: "action",
@@ -168,7 +168,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Shop List
+          Category List
         </Typography>
       )}
 
@@ -192,7 +192,7 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-export const DeliveryRoute = () => {
+export const ProductCategory = () => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("unitPrice");
   const [selected, setSelected] = React.useState([]);
@@ -205,13 +205,13 @@ export const DeliveryRoute = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/route/all"
+          "http://localhost:8080/api/v1/category/all"
         );
         const responseData = response.data;
         console.log(responseData);
 
         const newRows = responseData.map((data) =>
-          createData(data.id, data.routeName)
+          createData(data.categoryId, data.categoryName)
         );
         console.log(newRows);
         setRows(newRows);
@@ -231,7 +231,7 @@ export const DeliveryRoute = () => {
   const handleDelete = async (id) => {
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`http://localhost:8080/api/v1/route/delete/${id}`);
+      await axios.delete(`http://localhost:8080/api/v1/category/delete/${id}`);
 
       // Update the state to reflect the changes (remove the deleted row)
       const updatedRows = rows.filter((row) => row.id !== id);
@@ -239,6 +239,7 @@ export const DeliveryRoute = () => {
 
       // Clear the selected items
       setSelected([]);
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting data:", error);
     }
@@ -287,7 +288,7 @@ export const DeliveryRoute = () => {
   const isSelected = (id) => selected.indexOf(id) !== -1;
   const [open, setOpen] = React.useState(false);
   const [openedit, setOpenEdit] = React.useState(false);
-  const [selectedRoute, setSelectedRoute] = React.useState(null);
+  const [selectedCategory, setselectedCategory] = React.useState(null);
 
 
   const handleOpen = () => {
@@ -306,7 +307,7 @@ export const DeliveryRoute = () => {
   };
 
   const handleOpenEdit = (row) => {
-    setSelectedRoute(row);
+    setselectedCategory(row);
     setOpenEdit(true);
   };
  
@@ -323,7 +324,7 @@ export const DeliveryRoute = () => {
         }}
       >
         <Button variant="contained" onClick={handleOpen}>
-          New Delivery Route +{" "}
+          New Product Category +{" "}
         </Button>
       </div>
       <Dialog
@@ -332,7 +333,7 @@ export const DeliveryRoute = () => {
         TransitionComponent={Grow}
         transitionDuration={500}
       >
-        <AddDeliveryRoute></AddDeliveryRoute>
+        <AddProductCategory></AddProductCategory>
       </Dialog>
       <Dialog
         open={openedit}
@@ -340,7 +341,8 @@ export const DeliveryRoute = () => {
         TransitionComponent={Grow}
         transitionDuration={500}
       >
-       <EditDeliveryRoute id={selectedRoute ? selectedRoute.id : null} onClose={handleEditClose} />
+        
+       <EditProductCategory id={selectedCategory ? selectedCategory.categoryId : null} onClose={handleEditClose} />
       </Dialog>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -378,8 +380,8 @@ export const DeliveryRoute = () => {
                       >
                       
 
-                        <TableCell align="left">{row.id}</TableCell>
-                        <TableCell align="left">{row.routeName}</TableCell>
+                        <TableCell align="left">{row.categoryId}</TableCell>
+                        <TableCell align="left">{row.categoryName}</TableCell>
                       
                           <TableCell align="left">
                             <IconButton
@@ -392,7 +394,7 @@ export const DeliveryRoute = () => {
                             </IconButton>
                             <IconButton
                               aria-label="Delete"
-                              onClick={() => handleDelete(row.id)}
+                              onClick={() => handleDelete(row.categoryId)}
                               sx={{color:'#E74C3C'}}
                             >
                               <Delete />

@@ -17,6 +17,7 @@ import { SalesInvoice } from "./pages/sales/SalesInvoice";
 import { SalesInvoiceDetails } from "./pages/sales/SalesInvoiceDetails";
 import { DeliveryRoute } from "./pages/deliveryRoute/DeliveryRoute";
 import { NewSales } from "./pages/sales/NewSales";
+import { ProductCategory } from "./pages/productsCategory/ProductCategory";
 import { StockOut } from "./pages/stockOut/StockOut";
 import { ChequeDetails } from "./components/chequeDetails/ChequeDetails";
 import { PaymentChequeDetails } from "./pages/paymentDetails/cheque/PaymentChequeDetails";
@@ -37,6 +38,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Navigate to="/dashboard" />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/productCategory" element={<ProductCategory />} />
                 <Route path="/productList" element={<Products />} />
                 <Route path="/shopsList" element={<Shop />} />
                 <Route path="/deliveryRoute" element={<DeliveryRoute />} />
