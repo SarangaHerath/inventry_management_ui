@@ -65,7 +65,7 @@
       border-radius: 10px;
       .tableContainer {
         border-radius: 10px;
-        min-height: calc(100vh - 260px);
+        min-height: calc(100vh - 460px);
         overflow-y: auto;
         // border: 1px solid #ffffff;
         border-radius: 4px;
@@ -126,6 +126,125 @@
         }
       }
     }
+    .form2 {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      .form-input {
+        display: flex;
+        
+        align-items: center;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 8px;
+       
+        justify-content: space-between;
+        .MuiTextField-root {
+          width: 220px; // Adjust the width of the TextField
+        }
+
+        .MuiButton-root {
+          background-color: #ffffff;
+       
+          // border: 1px solid rgb(0, 17, 255);
+        }
+        .form-input-customer{
+          display: flex;
+          gap: 10px; // Adjust the gap between TextField and Button as needed
+          align-items: center;
+        }
+        .customer-details{
+          display: flex;
+          flex-direction: column;
+          span{
+            font-size: 16px;
+            
+            text-align: end;
+          }
+          
+        }
+        .form-input-product{
+          display: flex;
+          gap: 10px; // Adjust the gap between TextField and Button as needed
+          align-items: center;
+        }
+        .product-details{
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+      }
+     
+      
+    }
+
+    .table2 {
+      border-radius: 10px;
+      .tableContainer2 {
+        border-radius: 10px;
+        min-height: calc(100vh - 650px);
+        overflow-y: auto;
+        // border: 1px solid #ffffff;
+        border-radius: 4px;
+        margin-top: 15px;
+        background-color: rgb(247, 247, 247);
+        // Adjust the styles for the TableHead and TableBody
+        &::-webkit-scrollbar {
+          width: 8px; // Set the width of the scrollbar
+        }
+    
+        &::-webkit-scrollbar-track {
+          background-color: #f1f1f1; // Set the background color of the track
+        }
+    
+        &::-webkit-scrollbar-thumb {
+          background-color: #cccccc; // Set the color of the thumb
+          border-radius: 6px; // Set the border-radius of the thumb
+        }
+    
+        &::-webkit-scrollbar-thumb:hover {
+          background-color: #9f9e9e; // Set the color of the thumb on hover
+        }
+        table {
+          width: 100%;
+            
+          th, td {
+            text-align: left;
+            padding: 6px 10px;
+            font-size: 12px;
+            border-bottom: 1px solid #cdcbcb;
+            background-color: white;
+
+            input{
+              width:50px;
+              height: 20px;
+              border: 1px solid rgb(183, 182, 182);
+              text-align: center;
+              margin-right: 2px;
+            }
+            span{
+              color: rgb(255, 255, 255);
+              position: absolute;
+              background-color: red;
+              padding-left: 3px;
+              padding-right: 3px;
+              box-shadow: rgba(0, 0, 0, 0.4) 1.95px 1.95px 2.6px;
+            }
+
+          }
+      
+       th {
+        position: sticky; // Make the header sticky
+        top: 0; // Set the distance from the top
+        background-color: #ffffff;
+        z-index: 1; // Set z-index to stack the header on top
+        padding: 6px 10px;
+      }
+        }
+      }
+    }
+
   }
 
   .right-side {
