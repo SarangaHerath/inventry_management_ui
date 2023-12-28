@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const EditDeliveryRoute = (props) => {
   const { id } = props;
@@ -51,10 +53,18 @@ export const EditDeliveryRoute = (props) => {
 
       console.log('Route updated successfully:', response.data);
       handleClose();
-      window.location.reload();
+      toast.success("Delivery route updated successfully:")
+      handleClose();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
       // You may want to trigger a re-render or update the state in the parent component
     } catch (error) {
       console.error('Error updating route:', error);
+      toast.error(`Error delivery route updated: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
 
@@ -63,6 +73,7 @@ export const EditDeliveryRoute = (props) => {
       
     
       <div>
+        <ToastContainer />
         <form onSubmit={handleFormSubmit} className='add-shop-form'>
           <TextField
             variant="outlined"

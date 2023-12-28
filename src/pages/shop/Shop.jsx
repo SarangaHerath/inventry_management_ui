@@ -27,6 +27,9 @@ import { Link } from "react-router-dom";
 import { AddNewShop } from "./AddNewShop";
 import { Delete, Edit } from "@mui/icons-material";
 import { EditShop } from "./EditShop";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function createData(shopId, delivery_route_id, shopName, address, phoneNumber) {
   return {
@@ -267,8 +270,18 @@ console.log(responseData)
 
       // Clear the selected items
       setSelected([]);
+      toast.success("Shop deleted successfully:")
+      handleClose();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+
     } catch (error) {
       console.error("Error deleting data:", error);
+      toast.error(`Error deleting shop: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
   const handleSelectAllClick = (event) => {
@@ -346,6 +359,7 @@ console.log(responseData)
           marginBottom: "20px",
         }}
       >
+        <ToastContainer />
         <Button variant="contained" onClick={handleOpen}>
           Add New Shop +{" "}
         </Button>

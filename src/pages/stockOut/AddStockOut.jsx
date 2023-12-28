@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import "./addStockOut.scss";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AddStockOut = () => {
   // State to manage form data
@@ -73,7 +75,10 @@ console.log(productdetails)
 
       // Handle successful response, e.g., show a success message
       console.log("Stock Out added successfully:", response.data);
-      window.location.reload();
+      toast.success("Stock out added successfully:")
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
       // Reset the form after submission
       setFormData({
         productId: "",
@@ -84,6 +89,10 @@ console.log(productdetails)
     } catch (error) {
       // Handle error, e.g., show an error message
       console.error("Error adding stock out:", error);
+      toast.error(`Error add stock out: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
 
@@ -99,6 +108,7 @@ console.log(productdetails)
       style={{ width: "400px" }}
       onSubmit={handleFormSubmit}
     >
+      <ToastContainer />
       {/* Form for adding a new shop */}
       <label className="form-title">Add New Stock Out</label>
       <Grid container spacing={1}>
