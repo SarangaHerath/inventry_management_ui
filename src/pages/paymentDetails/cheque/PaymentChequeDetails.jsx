@@ -26,6 +26,8 @@ import { Button, Dialog, Grow, LinearProgress, colors } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Delete, Edit } from "@mui/icons-material";
 import { EditPaymentCheque } from "./EditPaymentCheque";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function createData(
   chequeId,
@@ -33,7 +35,8 @@ function createData(
   chequeNumber,
   receivedDate,
   bankDate,
-  amount
+  amount,
+  remark
 ) {
   return {
     chequeId,
@@ -42,6 +45,7 @@ function createData(
     receivedDate,
     bankDate,
     amount,
+    remark,
   };
 }
 
@@ -107,6 +111,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: "Amount",
+  },
+  {
+    id: "remark",
+    numeric: false,
+    disablePadding: false,
+    label: "Remark",
   },
 ];
 
@@ -250,7 +260,8 @@ export const PaymentChequeDetails = () => {
             data.chequeNumber, // Add null check for nested properties
             data.receivedDate,
             data.bankDate,
-            data.amount
+            data.amount,
+            data.remark
           );
         });
 
@@ -275,7 +286,10 @@ export const PaymentChequeDetails = () => {
       await axios.delete(
         `http://localhost:8080/api/v1/cheque/delete/${chequeId}`
       );
-
+      toast.success("Cheque delete successfully:")
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
       // Update the state to reflect the changes (remove the deleted row)
       // Inside handleDelete function
       const updatedRows = rows.filter((row) => row.chequeId !== chequeId);
@@ -284,7 +298,12 @@ export const PaymentChequeDetails = () => {
       // Clear the selected items
       setSelected([]);
     } catch (error) {
-      console.error("Error deleting data:", error);
+      console.error("Error deleting data:", error); const errorMessage = error.response.data;
+      toast.error(`Error updating cheque: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+
     }
   };
 
@@ -362,7 +381,9 @@ export const PaymentChequeDetails = () => {
           justifyContent: "flex-end",
           marginBottom: "20px",
         }}
-      ></div>
+      >
+        <ToastContainer />
+      </div>
       <Dialog
         open={openedit}
         onClose={handleEditClose}
@@ -417,6 +438,7 @@ export const PaymentChequeDetails = () => {
                           {row.bankDate || "N/A"}
                         </TableCell>
                         <TableCell align="left">{row.amount}</TableCell>
+                        <TableCell align="left">{row.remark}</TableCell>
                         <TableCell align="left" padding="20px">
                           <IconButton
                             sx={{ color: "#3498DB" }}

@@ -12,7 +12,8 @@ import { CalendarViewDay } from '@mui/icons-material';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import axios from 'axios';
 import { AddDeliveryRoute } from '../deliveryRoute/AddDeliveryRoute';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const NewSales = () => {
   const [routeOptions, setRouteOptions] = useState([]);
@@ -314,9 +315,17 @@ const currentDate = new Date();
       // Handle success, e.g., show a success message, reset state, etc.
       console.log("Sale added successfully:", response.data);
   
+      toast.success("Sale create successfully:")
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
     } catch (error) {
       // Handle error, e.g., show an error message
       console.error("Error adding sale:", error);
+      toast.error(`Error create sale: ${errorMessage}`);
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
     }
   };
   
@@ -325,6 +334,7 @@ const currentDate = new Date();
       <div className="left-side">
         <div className="form">
           {/* First input field with button */}
+          <ToastContainer />
           <div className="form-input">
             <div className='form-input-customer'>
             {routeOptions && (

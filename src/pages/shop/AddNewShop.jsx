@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button, InputLabel, Select, MenuItem, FormControl, Grid } from '@mui/material';
 import './addNewShop.scss';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 export const AddNewShop = () => {
@@ -45,7 +47,7 @@ export const AddNewShop = () => {
 
       // Handle successful response, e.g., show a success message
       console.log('Shop added successfully:', response.data);
-      window.location.reload();
+      
       // Reset the form after submission
       setFormData({
         shopName: '',
@@ -53,9 +55,17 @@ export const AddNewShop = () => {
         phoneNumber: '',
         deliveryRouteId: '',
       });
+
+      toast.success("Shop added successfully:")
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       // Handle error, e.g., show an error message
-      console.error('Error adding shop:', error);
+      toast.error(`Error add shop: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
 
@@ -71,6 +81,7 @@ export const AddNewShop = () => {
       style={{ width: '400px' }}
       onSubmit={handleFormSubmit}
     >
+      <ToastContainer />
       {/* Form for adding a new shop */}
       <label className='form-title'>Add New Shop</label>
       <Grid container spacing={1}>

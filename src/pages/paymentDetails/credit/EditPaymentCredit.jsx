@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TextField, Button, MenuItem } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./EditPaymentCredit.scss";
 
 export const EditPaymentCredit = (props) => {
@@ -100,30 +102,68 @@ export const EditPaymentCredit = (props) => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
+  
     const updatedFormData = {
       ...formData,
       creditId: id,
       shopId: selectedshop,
     };
-
+  
     try {
       const response = await axios.put(
         `http://localhost:8080/api/v1/credit/updateCredit`,
         updatedFormData
       );
-
-      console.log("Credit updated successfully:", response.data);
-
-      handleClose();
-      window.location.reload();
+  
+      console.log("Full response:", response); // Log the entire response
+  
+      if (response.status === 200) {
+        console.log("Credit updated successfully:", response.data);
+        toast.success('Credit updated successfully');
+        handleClose();
+        // Wait for 3 seconds before reloading the page
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      } else if (response.status === 400) {
+        console.error("Error updating credit:", response.data);
+        // Access the error message from the response body
+        const errorMessage = response.data;
+        toast.error(`Error updating credit: ${errorMessage}`);
+        // Wait for 3 seconds before reloading the page
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      } else {
+        // Handle other error cases
+        console.error("Error updating credit:", response.data);
+        toast.error(`Error updating credit: ${response.data}`);
+        // Wait for 3 seconds before reloading the page
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }
     } catch (error) {
-      console.error("Error updating cheque:", error);
+      console.error("Error updating credit:", error);
+  
+      if (error.response && error.response.status === 400) {
+        // Access the error message from the response body
+        const errorMessage = error.response.data;
+        toast.error(`Error updating credit: ${errorMessage}`);
+      } else {
+        toast.error(`Error updating credit: ${error.message}`);
+      }
+  
+      // Wait for 3 seconds before reloading the page
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       <form onSubmit={handleFormSubmit} className="edit-shop-form">
         <div>
           <TextField

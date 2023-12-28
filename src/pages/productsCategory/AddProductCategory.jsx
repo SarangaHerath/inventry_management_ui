@@ -3,6 +3,9 @@ import { TextField, Button } from '@mui/material';
 import './addProductCategory.scss'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 
 export const AddProductCategory = () => {
@@ -37,9 +40,16 @@ export const AddProductCategory = () => {
       categoryName: ''
     });
       // Reload the page
-    window.location.reload();
+      toast.success("Category added successfully:")
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }catch(error){
-      console.error('Error adding product:', error);
+      console.error('Error adding category:', error);
+      toast.error(`Error adding category: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
 
     
@@ -47,7 +57,7 @@ export const AddProductCategory = () => {
 
   return (
     <div>
-     
+       <ToastContainer />
       {/* Form for adding a new shop */}
       <form onSubmit={handleFormSubmit} className='add-shop-form'>
       <label className='form-title'>Add New Category</label>

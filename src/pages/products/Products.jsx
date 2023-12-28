@@ -26,6 +26,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grow, Linear
 import { Link } from 'react-router-dom';
 import { AddNewProducts } from './AddNewProducts';
 
+
 function createData(id, name, weight, date, unitPrice, quantity) {
   return {
     id,

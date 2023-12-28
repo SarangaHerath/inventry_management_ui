@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TextField, Button, MenuItem } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./EditPaymentCheque.scss";
 
 export const EditPaymentCheque = (props) => {
@@ -15,6 +17,7 @@ export const EditPaymentCheque = (props) => {
     receivedDate: "",
     bankDate: "",
     amount: "",
+    remark:"",
   });
 
   const [open, setOpen] = useState(false);
@@ -31,7 +34,7 @@ export const EditPaymentCheque = (props) => {
         const response = await axios.get(
           `http://localhost:8080/api/v1/cheque/getById/${id}`
         );
-        const { chequeId,shopId,chequeNumber,receivedDate,bankDate,amount } =
+        const { chequeId,shopId,chequeNumber,receivedDate,bankDate,amount,remark } =
           response.data || {};
         setFormData({
           chequeId,
@@ -40,14 +43,20 @@ export const EditPaymentCheque = (props) => {
           receivedDate,
           bankDate,
           amount,
+          remark
         });
+        
         console.log(response.data);
         setSelectedShop(shopId);
         // setSelectedVehicle(vehicleId);
         setOpen(true);
+        
+
       } catch (error) {
         console.error("Error fetching shop details:", error);
+       
       }
+
     };
 
     fetchData();
@@ -109,16 +118,24 @@ export const EditPaymentCheque = (props) => {
       );
 
       console.log("Cheque updated successfully:", response.data);
-
+      toast.success("Cheque updated successfully:")
       handleClose();
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Error updating cheque:", error);
+      const errorMessage = error.response.data;
+      toast.error(`Error updating cheque: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       <form onSubmit={handleFormSubmit} className="edit-shop-form">
         <div>
           <TextField
@@ -148,7 +165,6 @@ export const EditPaymentCheque = (props) => {
         >
           {shopOptions}
         </TextField>
-
 
         <div>
           <TextField
@@ -208,6 +224,19 @@ export const EditPaymentCheque = (props) => {
             size="small"
           />
  </div>
+ <TextField
+            variant="outlined"
+            label="Remark"
+            name="remark"
+            value={formData.remark}
+            onChange={(e) =>
+              setFormData({ ...formData, remark: e.target.value })
+            }
+            required
+            fullWidth
+            margin="normal"
+            size="small"
+          />
         <Button type="submit" variant="contained" color="primary">
           Update Cheque
         </Button>
