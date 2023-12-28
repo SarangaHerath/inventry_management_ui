@@ -22,20 +22,28 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { Button, Dialog, Grow, LinearProgress } from "@mui/material";
+import { Button, Dialog, Grow, LinearProgress, colors } from "@mui/material";
 import { Link } from "react-router-dom";
-import { AddDeliveryRoute } from "./AddDeliveryRoute";
-import { Delete, Edit, Update } from "@mui/icons-material";
-import { EditDeliveryRoute } from "./EditDeliveryRoute";
-EditDeliveryRoute
+import { Delete, Edit } from "@mui/icons-material";
+import { EditPaymentCredit } from "./EditPaymentCredit";
 
-function createData(id, routeName) {
+function createData(
+  creditId,
+  shopId,
+  creditAmount,
+  billDate,
+  paidAmount,
+  lastPaymentDate
+) {
   return {
-    id,
-    routeName,
+    creditId,
+    shopId,
+    creditAmount,
+    billDate,
+    paidAmount,
+    lastPaymentDate
   };
 }
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -68,19 +76,37 @@ const headCells = [
     id: "id",
     numeric: false,
     disablePadding: false,
-    label: "Id",
+    label: "Credit Id",
   },
   {
-    id: "routeName",
+    id: "shopId",
     numeric: false,
     disablePadding: false,
-    label: "Route Name",
+    label: "Shop Name",
   },
   {
-    id: "action",
+    id: "creditAmount",
     numeric: false,
     disablePadding: false,
-    label: "Actions",
+    label: "Credit Amount",
+  },
+  {
+    id: "billDate",
+    numeric: false,
+    disablePadding: false,
+    label: "Bill Date",
+  },
+  {
+    id: "paidAmount",
+    numeric: false,
+    disablePadding: false,
+    label: "Paid Amount",
+  },
+  {
+    id: "lastPaymentDate",
+    numeric: false,
+    disablePadding: false,
+    label: "Last Payment Date",
   },
 ];
 
@@ -168,7 +194,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Shop List
+           Credit List
         </Typography>
       )}
 
@@ -192,7 +218,7 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-export const DeliveryRoute = () => {
+export const PaymentCreditDetails = () => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("unitPrice");
   const [selected, setSelected] = React.useState([]);
@@ -200,19 +226,34 @@ export const DeliveryRoute = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
-
+  const [selectedCredit, setselectedCredit] = React.useState(null);
+  const [openedit, setOpenEdit] = React.useState(false);
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/route/all"
+          "http://localhost:8080/api/v1/credit/getAll"
         );
         const responseData = response.data;
         console.log(responseData);
+        const newRows = (responseData || []).map((data) => {
+          if (!data) {
+            console.log("Debugging: data is null", data);
+            return null;
+          }
 
-        const newRows = responseData.map((data) =>
-          createData(data.id, data.routeName)
-        );
+          console.log("Debugging: data is", data);
+
+          return createData(
+            data.creditId,
+            data.shop.shopName, // Add null check for nested properties
+            data.creditAmount, // Add null check for nested properties
+            data.billDate,
+            data.paidAmount,
+            data.lastPaymentDate
+          );
+        });
+
         console.log(newRows);
         setRows(newRows);
       } catch (error) {
@@ -228,13 +269,16 @@ export const DeliveryRoute = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  const handleDelete = async (id) => {
+  const handleDelete = async (creditId) => {
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`http://localhost:8080/api/v1/route/delete/${id}`);
+      await axios.delete(
+        `http://localhost:8080/api/v1/cheque/delete/${creditId}`
+      );
 
       // Update the state to reflect the changes (remove the deleted row)
-      const updatedRows = rows.filter((row) => row.id !== id);
+      // Inside handleDelete function
+      const updatedRows = rows.filter((row) => row.creditId !== creditId);
       setRows(updatedRows);
 
       // Clear the selected items
@@ -243,6 +287,7 @@ export const DeliveryRoute = () => {
       console.error("Error deleting data:", error);
     }
   };
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
@@ -270,7 +315,7 @@ export const DeliveryRoute = () => {
     }
     setSelected(newSelected);
   };
-  
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -286,9 +331,6 @@ export const DeliveryRoute = () => {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
   const [open, setOpen] = React.useState(false);
-  const [openedit, setOpenEdit] = React.useState(false);
-  const [selectedRoute, setSelectedRoute] = React.useState(null);
-
 
   const handleOpen = () => {
     setOpen(true);
@@ -297,21 +339,20 @@ export const DeliveryRoute = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleOpenEdit = (row) => {
+    setselectedCredit(row);
+    setOpenEdit(true);
+  };
 
+  const handleEditClose = () => {
+    setOpenEdit(false);
+  };
+  // const formattedDate = new Date(data.date_out).toLocaleDateString();
   const handleAddProduct = async () => {
     // Add logic to handle adding a product
     // ...
     // After adding the product, close the modal
     handleClose();
-  };
-
-  const handleOpenEdit = (row) => {
-    setSelectedRoute(row);
-    setOpenEdit(true);
-  };
- 
-  const handleEditClose = () => {
-    setOpenEdit(false);
   };
   return (
     <Box sx={{}}>
@@ -321,28 +362,18 @@ export const DeliveryRoute = () => {
           justifyContent: "flex-end",
           marginBottom: "20px",
         }}
-      >
-        <Button variant="contained" onClick={handleOpen}>
-          New Delivery Route +{" "}
-        </Button>
-      </div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Grow}
-        transitionDuration={500}
-      >
-        <AddDeliveryRoute></AddDeliveryRoute>
-      </Dialog>
+      ></div>
       <Dialog
         open={openedit}
         onClose={handleEditClose}
         TransitionComponent={Grow}
         transitionDuration={500}
       >
-       <EditDeliveryRoute id={selectedRoute ? selectedRoute.id : null} onClose={handleEditClose} />
+        <EditPaymentCredit
+          id={selectedCredit ? selectedCredit.creditId : null}
+        />
       </Dialog>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      <Paper sx={{ width: "100%", mb: 1 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         {rows.length > 0 ? (
           <TableContainer>
@@ -363,43 +394,46 @@ export const DeliveryRoute = () => {
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
-                    const uniqueKey = `row-${row.id}`;
+                    const uniqueKey = `row-${row.creditId}`; // Use creditId as a unique key
                     return (
                       <TableRow
-                        hover
-                      
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
                         key={uniqueKey}
-                        selected={isItemSelected}
-                        sx={{ cursor: "pointer" }}
+                        hover
+                        tabIndex={-1}
+                        style={{
+                          cursor: "pointer",
+                          padding: "0px",
+                          height: "50px",
+                        }}
                       >
-                      
-
-                        <TableCell align="left">{row.id}</TableCell>
-                        <TableCell align="left">{row.routeName}</TableCell>
-                      
-                          <TableCell align="left">
-                            <IconButton
-                             sx={{color:'#3498DB'}}
-                              aria-label="Edit"
-                              onClick={() => handleOpenEdit(row)} // Pass the row to handleOpenEdit
-                  >
-                            
-                              <Edit />
-                            </IconButton>
-                            <IconButton
-                              aria-label="Delete"
-                              onClick={() => handleDelete(row.id)}
-                              sx={{color:'#E74C3C'}}
-                            >
-                              <Delete />
-                            </IconButton>
-                            
-                          </TableCell>
-                     
+                        <TableCell align="left">{row.creditId}</TableCell>
+                        <TableCell align="left">{row.shopId}</TableCell>
+                        <TableCell align="left">{row.creditAmount}</TableCell>
+                        <TableCell align="left">
+                          {row.billDate || "N/A"}
+                        </TableCell>
+                        <TableCell align="left">{row.paidAmount || "N/A"}</TableCell>
+                        <TableCell align="left">
+                          {row.lastPaymentDate || "N/A"}
+                        </TableCell>
+                        
+                        <TableCell align="left" padding="20px">
+                          <IconButton
+                            sx={{ color: "#3498DB" }}
+                            aria-label="Edit"
+                            onClick={() => handleOpenEdit(row)}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton
+                            aria-label="Delete"
+                            onClick={() => handleDelete(row.creditId)} // Use creditId here
+                            sx={{ color: "#E74C3C" }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                     );
                   })}

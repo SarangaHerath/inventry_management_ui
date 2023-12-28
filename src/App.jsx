@@ -17,9 +17,11 @@ import { SalesInvoice } from "./pages/sales/SalesInvoice";
 import { SalesInvoiceDetails } from "./pages/sales/SalesInvoiceDetails";
 import { DeliveryRoute } from "./pages/deliveryRoute/DeliveryRoute";
 import { NewSales } from "./pages/sales/NewSales";
+import { ProductCategory } from "./pages/productsCategory/ProductCategory";
 import { StockOut } from "./pages/stockOut/StockOut";
 import { ChequeDetails } from "./components/chequeDetails/ChequeDetails";
 import { PaymentChequeDetails } from "./pages/paymentDetails/cheque/PaymentChequeDetails";
+import { PaymentCreditDetails } from "./pages/paymentDetails/credit/PaymentCreditDetails";
 
 function App() {
   return (
@@ -36,6 +38,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Navigate to="/dashboard" />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/productCategory" element={<ProductCategory />} />
                 <Route path="/productList" element={<Products />} />
                 <Route path="/shopsList" element={<Shop />} />
                 <Route path="/deliveryRoute" element={<DeliveryRoute />} />
@@ -44,6 +47,7 @@ function App() {
                 <Route path="/salesInvoice" element={<SalesInvoice />} />
                 <Route path="/salesInvoiceDetails" element={<SalesInvoiceDetails />} />
                 <Route path="/chequeDetails" element={<PaymentChequeDetails />} />
+                <Route path="/creaditlist" element={<PaymentCreditDetails />} />
                 <Route path="/addNewShop" element={<AddNewShop />} />
                 {/* Add other protected routes here */}
               </Routes>

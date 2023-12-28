@@ -139,6 +139,7 @@ export const Sidebar = ({ children }) => {
 
   const menuItem = [
     { path: '/dashboard', name: 'Dashboard', icon: <FaTh style={{ color: 'blue' }} /> },
+    { path: '/productCategory', name: 'Product Category', icon: <FaTh style={{ color: 'blue' }} /> },
     { path: '/productList', name: 'Product', icon: <FaShoppingBag style={{ color: 'peru' }} /> },
     { path: '/shopsList', name: 'Shops', icon: <FaBuilding style={{ color: '#239B56' }} /> },
     { path: '/deliveryRoute', name: 'Delivery Routes', icon: <FaMapMarkedAlt style={{ color: '#239B56' }} /> },
