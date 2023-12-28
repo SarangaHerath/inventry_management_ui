@@ -129,7 +129,16 @@ const fetchProduct = async (id) => {
 
     const productOptions = productData.map((product) => (
       <MenuItem key={product.productId} value={product.productId}>
-        {product.productName}-{product.weight}g
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'20px',width:'100%'}}>
+          <div>
+          {product.productName}
+          </div>
+          <div style={{backgroundColor:'#D5D8DC',height:'30px',width:'70px',borderRadius:'5px',display:'flex',justifyContent:'center',alignItems:'center'}}>
+          {product.weight}g
+          </div>
+        
+        </div>
+         
       </MenuItem>
     ));
 
@@ -153,9 +162,20 @@ const fetchFreeProduct = async (id) => {
     console.log(productData)
     const productOptions = productData.map((product) => (
       <MenuItem key={product.product.productId} value={product.product.productId}>
-        {product.product.productName}-{product.product.weight}g
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:'20px', width:'100%'}}>
+          <div>
+            {product.product.productName}
+            {product.product.quantity === 0 && (
+              <span style={{color: 'red'}}>Out of Stock</span>
+            )}
+          </div>
+          <div style={{backgroundColor:'#D5D8DC', height:'30px', width:'70px', borderRadius:'5px', display:'flex', justifyContent:'center', alignItems:'center'}}>
+            {product.product.weight}g
+          </div>
+        </div>
       </MenuItem>
     ));
+    
 
     // Initialize available quantity for each product
     const initialAvailableQuantity = {};
