@@ -22,7 +22,6 @@ export const Dashboard = () => {
     startDate: '',
     endDate: '2023-12-30',
   });
-
   useEffect(() => {
     const fetchData = async () => {
       try {
