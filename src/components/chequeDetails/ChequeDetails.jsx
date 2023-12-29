@@ -79,6 +79,11 @@ export const ChequeDetails = ({ shopId,onClose }) => {
         />
       </div>
       <div>
+      {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DatePicker']}>
+        <DatePicker label="Basic date picker" />
+      </DemoContainer>
+    </LocalizationProvider> */}
         <TextField
           variant="outlined"
           type="date"

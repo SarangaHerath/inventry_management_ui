@@ -1,0 +1,158 @@
+# npm resolution error report
+
+2023-12-29T04:06:17.591Z
+
+While resolving: @mui/x-date-pickers@6.18.6
+Found: date-fns@3.0.6
+node_modules/date-fns
+  date-fns@"^3.0.6" from the root project
+
+Could not resolve dependency:
+peerOptional date-fns@"^2.25.0" from @mui/x-date-pickers@6.18.6
+node_modules/@mui/x-date-pickers
+  @mui/x-date-pickers@"*" from the root project
+
+Conflicting peer dependency: date-fns@2.30.0
+node_modules/date-fns
+  peerOptional date-fns@"^2.25.0" from @mui/x-date-pickers@6.18.6
+  node_modules/@mui/x-date-pickers
+    @mui/x-date-pickers@"*" from the root project
+
+Fix the upstream dependency conflict, or retry
+this command with --force, or --legacy-peer-deps
+to accept an incorrect (and potentially broken) dependency resolution.
+
+Raw JSON explanation object:
+
+{
+  "code": "ERESOLVE",
+  "edge": {
+    "type": "peerOptional",
+    "name": "date-fns",
+    "spec": "^2.25.0",
+    "error": "INVALID",
+    "from": {
+      "name": "@mui/x-date-pickers",
+      "version": "6.18.6",
+      "location": "node_modules/@mui/x-date-pickers",
+      "isWorkspace": false,
+      "dependents": [
+        {
+          "type": "prod",
+          "name": "@mui/x-date-pickers",
+          "spec": "*",
+          "from": {
+            "location": "C:\\Users\\User\\Desktop\\Project_pos\\inventry_management_ui"
+          }
+        }
+      ]
+    }
+  },
+  "dep": {
+    "name": "date-fns",
+    "version": "2.30.0",
+    "whileInstalling": {
+      "name": "@mui/x-date-pickers",
+      "version": "6.18.6",
+      "path": "C:\\Users\\User\\Desktop\\Project_pos\\inventry_management_ui\\node_modules\\@mui\\x-date-pickers"
+    },
+    "location": "node_modules/date-fns",
+    "isWorkspace": false,
+    "dependents": [
+      {
+        "type": "peerOptional",
+        "name": "date-fns",
+        "spec": "^2.25.0",
+        "error": "INVALID",
+        "from": {
+          "name": "@mui/x-date-pickers",
+          "version": "6.18.6",
+          "location": "node_modules/@mui/x-date-pickers",
+          "isWorkspace": false,
+          "dependents": [
+            {
+              "type": "prod",
+              "name": "@mui/x-date-pickers",
+              "spec": "*",
+              "from": {
+                "location": "C:\\Users\\User\\Desktop\\Project_pos\\inventry_management_ui"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "current": {
+    "name": "date-fns",
+    "version": "3.0.6",
+    "location": "node_modules/date-fns",
+    "isWorkspace": false,
+    "dependents": [
+      {
+        "type": "prod",
+        "name": "date-fns",
+        "spec": "^3.0.6",
+        "from": {
+          "location": "C:\\Users\\User\\Desktop\\Project_pos\\inventry_management_ui"
+        }
+      }
+    ]
+  },
+  "peerConflict": {
+    "current": {
+      "name": "date-fns",
+      "version": "3.0.6",
+      "location": "node_modules/date-fns",
+      "isWorkspace": false,
+      "dependents": [
+        {
+          "type": "prod",
+          "name": "date-fns",
+          "spec": "^3.0.6",
+          "from": {
+            "location": "C:\\Users\\User\\Desktop\\Project_pos\\inventry_management_ui"
+          }
+        }
+      ]
+    },
+    "peer": {
+      "name": "date-fns",
+      "version": "2.30.0",
+      "whileInstalling": {
+        "name": "@mui/x-date-pickers",
+        "version": "6.18.6",
+        "path": "C:\\Users\\User\\Desktop\\Project_pos\\inventry_management_ui\\node_modules\\@mui\\x-date-pickers"
+      },
+      "location": "node_modules/date-fns",
+      "isWorkspace": false,
+      "dependents": [
+        {
+          "type": "peerOptional",
+          "name": "date-fns",
+          "spec": "^2.25.0",
+          "error": "INVALID",
+          "from": {
+            "name": "@mui/x-date-pickers",
+            "version": "6.18.6",
+            "location": "node_modules/@mui/x-date-pickers",
+            "isWorkspace": false,
+            "dependents": [
+              {
+                "type": "prod",
+                "name": "@mui/x-date-pickers",
+                "spec": "*",
+                "from": {
+                  "location": "C:\\Users\\User\\Desktop\\Project_pos\\inventry_management_ui"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "strictPeerDeps": false,
+  "force": false,
+  "isMine": true
+}
