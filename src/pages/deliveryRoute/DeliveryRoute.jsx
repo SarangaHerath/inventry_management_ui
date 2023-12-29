@@ -27,6 +27,8 @@ import { Link } from "react-router-dom";
 import { AddDeliveryRoute } from "./AddDeliveryRoute";
 import { Delete, Edit, Update } from "@mui/icons-material";
 import { EditDeliveryRoute } from "./EditDeliveryRoute";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 EditDeliveryRoute
 
 function createData(id, routeName) {
@@ -239,8 +241,17 @@ export const DeliveryRoute = () => {
 
       // Clear the selected items
       setSelected([]);
+      toast.success("Delivery route delete successfully:")
+      handleClose();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Error deleting data:", error);
+      toast.error(`Error Delivery route delete: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
   const handleSelectAllClick = (event) => {
@@ -322,6 +333,7 @@ export const DeliveryRoute = () => {
           marginBottom: "20px",
         }}
       >
+        <ToastContainer />
         <Button variant="contained" onClick={handleOpen}>
           New Delivery Route +{" "}
         </Button>

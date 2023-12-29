@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export const EditProductCategory = (props) => {
@@ -22,7 +24,7 @@ export const EditProductCategory = (props) => {
       console.log("Fetching data for id:", id);
       try {
         const response = await axios.get(`http://localhost:8080/api/v1/category/getById/${id}`);
-        const {  categoryId, categoryName } = response.data || {};
+        const { categoryId, categoryName } = response.data || {};
         console.log("Data received:", response.data);
         console.log("id:", categoryId); // Use the renamed variable here
         setFormData({ categoryId, categoryName });
@@ -52,10 +54,17 @@ export const EditProductCategory = (props) => {
 
       console.log('category updated successfully:', response.data);
       handleClose();
-      window.location.reload();
+      toast.success("Category update successfully:")
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
       // You may want to trigger a re-render or update the state in the parent component
     } catch (error) {
       console.error('Error updating category:', error);
+      toast.error(`Error updating category: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
 
@@ -64,6 +73,7 @@ export const EditProductCategory = (props) => {
       
     
       <div>
+        <ToastContainer />
         <form onSubmit={handleFormSubmit} className='add-shop-form'>
           <TextField
             variant="outlined"

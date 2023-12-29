@@ -3,6 +3,9 @@ import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, M
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './editShop.scss'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export const EditShop = (props) => {
   const { id } = props;
   console.log(id)
@@ -11,33 +14,47 @@ export const EditShop = (props) => {
   const [formData, setFormData] = useState({
     shopId: '',
     deliveryRouteId: '',
+    routeName:'',
     shopName: '',
     address: '',
     phoneNumber: '',
   });
 
   const [open, setOpen] = useState(false);
-
+-
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/api/v1/shop/get-by-id/${id}`);
-        const { shopId, deliveryRouteId, shopName, address, phoneNumber } = response.data || {};
-        setFormData({ shopId, deliveryRouteId, shopName, address, phoneNumber });
-        setOpen(true);
-      } catch (error) {
-        console.error('Error fetching shop details:', error);
-      }
+        try {
+            const response = await axios.get(`http://localhost:8080/api/v1/shop/get-by-id/${id}`);
+            const { shopId, deliveryRoute, shopName, address, phoneNumber } = response.data || {};
+
+            setFormData({
+                shopId,
+                deliveryRouteId: deliveryRoute?.id || '', // Using optional chaining and providing a default value
+                routeName: deliveryRoute?.routeName || '',
+                shopName,
+                address,
+                phoneNumber
+            });
+
+            console.log("edit data", response.data);
+            setOpen(true);
+        } catch (error) {
+            console.error('Error fetching shop details:', error);
+        }
     };
 
     fetchData();
-  }, [id]);
+}, [id]);
+
+  console.log("formdata",formData);
   const [routeOptions, setRouteOptions] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState(null);
   const fetchDeliveryRoute = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/v1/route/all");
       const routeData = response.data;
+      console.log(routeData)
       const routeOptions = routeData.map((droute) => (
         <MenuItem key={droute.id} value={droute.id}>
           {droute.routeName}
@@ -53,11 +70,9 @@ export const EditShop = (props) => {
   }, []);
 
   const handleRouteChange = (event) => {
-    const selectedRouteId = event.target.value;
-    setSelectedRoute(selectedRouteId)
- 
-    
-  };
+    const selectedRoute = event.target.value;
+    setSelectedRoute(selectedRoute);
+};
 
   const handleClose = () => {
     setOpen(false);
@@ -65,30 +80,37 @@ export const EditShop = (props) => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-  
-    // Update the deliveryRouteId in formData
-    const updatedFormData = { ...formData, deliveryRouteId: selectedRoute };
-  
+
     try {
-      const response = await axios.put(
-        `http://localhost:8080/api/v1/shop/update`,
-        updatedFormData
-      );
-  
-      console.log('Shop updated successfully:', response.data);
-  
-      handleClose();
-      // Redirect to the shop list page or any other page
-      window.location.reload();
+        const response = await axios.put(
+            `http://localhost:8080/api/v1/shop/update`,
+            {
+                ...formData,
+            }
+        );
+
+        console.log('Shop updated successfully:', response.data);
+
+        handleClose();
+        // Redirect to the shop list page or any other page
+        toast.success("Shop updated successfully:")
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
 
     } catch (error) {
-      console.error('Error updating shop:', error);
+        console.error('Error updating shop:', error);
+        toast.error(`Error updating shop: ${errorMessage}`);
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
     }
-  };
+};
+
 
   return (
     <div>
-    
+    <ToastContainer />
           <form onSubmit={handleFormSubmit} className='edit-shop-form'>
           <div>
           <TextField
@@ -103,25 +125,17 @@ export const EditShop = (props) => {
             />
             
           </div>
-         
-          {routeOptions && (
-        <TextField
-          id="outlined-select-currency1"
-          select
-          label="Select Delivery Route"
-          defaultValue=""
-          size="small"
-     
-          value={selectedRoute}
-          onChange={handleRouteChange}
-        >
-          {routeOptions.map((option) => (
-            <MenuItem key={option.props.value} value={option.props.value}>
-              {option.props.children}
-            </MenuItem>
-          ))}
-        </TextField>
-      )}     
+          <TextField
+              variant="outlined"
+              label="Delivery Route ID"
+              name="deliveryRouteId"
+              value={formData.deliveryRouteId}
+              InputProps={{ readOnly: true }}
+              fullWidth
+              margin="normal"
+              size="small"
+            />
+          
           
           <div>
           <TextField

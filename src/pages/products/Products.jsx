@@ -28,6 +28,7 @@ import { AddNewProducts } from './AddNewProducts';
 import { EditProducts } from './EditProducts';
 import {Delete, Edit } from '@mui/icons-material';
 
+
 function createData(productId, name, weight, date, unitPrice, quantity,category) {
   return {
     productId,
@@ -235,7 +236,7 @@ export const Products = () => {
       try {
         const response = await axios.get('http://localhost:8080/api/v1/product/all');
         const responseData = response.data;
-console.log(responseData);
+console.log("Responsesss",responseData);
         const newRows = responseData.map((data) =>
           createData(
             data.productId,
@@ -412,7 +413,7 @@ console.log(newRows);
                         <TableCell align="left">{row.date}</TableCell>
                         <TableCell align="right">{row.unitPrice}</TableCell>
                         <TableCell align="right">{row.quantity}</TableCell>
-                        <TableCell align="right">{row.category}</TableCell>
+                        <TableCell align="right">{row.category.categoryName}</TableCell>
 
                         {/* edit and delete */}
                         <TableCell align="left">

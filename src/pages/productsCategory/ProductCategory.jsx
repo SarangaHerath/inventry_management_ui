@@ -26,6 +26,8 @@ import { Button, Dialog, Grow, LinearProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { AddProductCategory } from "./AddProductCategory";
 import { Delete, Edit, Update } from "@mui/icons-material";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { EditProductCategory } from "./EditProductCategory";
 
 
@@ -239,9 +241,16 @@ export const ProductCategory = () => {
 
       // Clear the selected items
       setSelected([]);
-      window.location.reload();
+      toast.success("Cheque delete successfully:")
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Error deleting data:", error);
+      toast.error(`Error updating cheque: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
   const handleSelectAllClick = (event) => {
@@ -322,7 +331,7 @@ export const ProductCategory = () => {
           justifyContent: "flex-end",
           marginBottom: "20px",
         }}
-      >
+      ><ToastContainer />
         <Button variant="contained" onClick={handleOpen}>
           New Product Category +{" "}
         </Button>

@@ -3,6 +3,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import './chequeDetails.scss';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ChequeDetails = ({ shopId,onClose }) => {
   console.log(shopId)
@@ -11,6 +13,7 @@ export const ChequeDetails = ({ shopId,onClose }) => {
     receivedDate: '',
     bankDate: '',
     amount: 0,
+    remark:''
   });
 
   const handleInputChange = (event) => {
@@ -32,22 +35,29 @@ export const ChequeDetails = ({ shopId,onClose }) => {
 
       console.log('Cheque details added successfully:', response.data);
       // Reset the form after successful submission
+      toast.success("Cheque Added successfully:")
+       
       setFormData({
         chequeNumber: '',
         receivedDate: '',
         bankDate: '',
         amount: 0,
+        remark:''
       });
       onClose(response.data.amount);
     } catch (error) {
       console.error('Error adding cheque details:', error);
+      toast.error(`Error adding cheque details: ${errorMessage}`);
+        
     }
   };
 
   return (
     <form onSubmit={handleFormSubmit} className="add-cheque-form">
       <label className='form-title'>Add Cheque Details</label>
+      <ToastContainer />
       <div>
+
         <TextField
           variant="outlined"
           label="Cheque Number"
@@ -99,6 +109,17 @@ export const ChequeDetails = ({ shopId,onClose }) => {
           label="Amount"
           name="amount"
           value={formData.amount}
+          onChange={handleInputChange}
+          required
+          className='textfield'
+          size='small'
+        />
+           <TextField
+          variant="outlined"
+          type="text"
+          label="Remark"
+          name="remark"
+          value={formData.remark}
           onChange={handleInputChange}
           required
           className='textfield'
