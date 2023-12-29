@@ -86,8 +86,8 @@ export const Dashboard = () => {
               </Grid>
               <Grid item style={{ textAlign: 'right' }}>
                 <div>
-                  <Typography style={{ fontSize:'15px',fontWeight:'400',color:'#010929' }}>Compared to Oct 2023</Typography>
-                </div>
+                <Typography style={{ fontSize:'12px',fontWeight:'400',color:'#010929',marginTop:'10px' }}>Compared {dateRange.startDate} to {dateRange.endDate} </Typography>
+                 </div>
               </Grid>
             </CardContent>
           </Card>
@@ -98,7 +98,7 @@ export const Dashboard = () => {
           <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', border: '1px solid #e0e0e0' ,borderRadius:'20px'}}>
             <CardContent>
               <Typography style={{ fontSize:'18px',fontWeight:'bold',color:'#010929' }} color="textSecondary" gutterBottom>
-              Out-of-Stock Products
+              Total Free Items
               </Typography>
               <Grid container spacing={1} alignItems="center" justifyContent="space-between">
               
@@ -106,7 +106,7 @@ export const Dashboard = () => {
                   <div style={{display:'flex',gap:'20px',alignItems:'center'}}>
                   <RemoveShoppingCartIcon fontSize="large" color="primary" style={{ color: 'white', backgroundColor: "#2E86C1", borderRadius: '10px', padding: '5px' }} />
 
-                    <Typography style={{ fontSize:'26px',fontWeight:'500',color:'#010929' }}>100</Typography>
+                    <Typography style={{ fontSize:'26px',fontWeight:'500',color:'#010929' }}>{details.totalFreeItems}</Typography>
                   </div>
                 </Grid>
                 <Grid item>
@@ -117,7 +117,7 @@ export const Dashboard = () => {
               </Grid>
               <Grid item style={{ textAlign: 'right' }}>
                 <div>
-                  <Typography style={{ fontSize:'15px',fontWeight:'400',color:'#010929' }}>Compared to Oct 2023</Typography>
+                  <Typography style={{ fontSize:'12px',fontWeight:'400',color:'#010929',marginTop:'10px' }}>Compared {dateRange.startDate} to {dateRange.endDate} </Typography>
                 </div>
               </Grid>
             </CardContent>
@@ -127,7 +127,7 @@ export const Dashboard = () => {
           <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', border: '1px solid #e0e0e0' ,borderRadius:'20px'}}>
             <CardContent>
               <Typography style={{ fontSize:'18px',fontWeight:'bold',color:'#010929' }} color="textSecondary" gutterBottom>
-                Total Customers
+                Total Discounts
               </Typography>
               <Grid container spacing={1} alignItems="center" justifyContent="space-between">
               
@@ -135,7 +135,7 @@ export const Dashboard = () => {
                   <div style={{display:'flex',gap:'20px',alignItems:'center'}}>
                   <PeopleAlt fontSize="large" color="primary" style={{ color: 'white', backgroundColor: "#28B463", borderRadius: '10px', padding: '5px' }} />
 
-                    <Typography style={{ fontSize:'26px',fontWeight:'500',color:'#010929' }}>100</Typography>
+                    <Typography style={{ fontSize:'26px',fontWeight:'500',color:'#010929' }}>{details.totalDiscount}</Typography>
                   </div>
                 </Grid>
                 <Grid item>
@@ -146,8 +146,8 @@ export const Dashboard = () => {
               </Grid>
               <Grid item style={{ textAlign: 'right' }}>
                 <div>
-                  <Typography style={{ fontSize:'15px',fontWeight:'400',color:'#010929' }}>Compared to Oct 2023</Typography>
-                </div>
+                <Typography style={{ fontSize:'12px',fontWeight:'400',color:'#010929',marginTop:'10px'}}>Compared {dateRange.startDate} to {dateRange.endDate} </Typography>
+ </div>
               </Grid>
             </CardContent>
           </Card>
@@ -156,7 +156,7 @@ export const Dashboard = () => {
           <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', border: '1px solid #e0e0e0' ,borderRadius:'20px'}}>
             <CardContent>
               <Typography style={{ fontSize:'18px',fontWeight:'bold',color:'#010929' }} color="textSecondary" gutterBottom>
-                Total Profit
+                Total Sales
               </Typography>
               <Grid container spacing={1} alignItems="center" justifyContent="space-between">
               
@@ -164,7 +164,7 @@ export const Dashboard = () => {
                   <div style={{display:'flex',gap:'20px',alignItems:'center'}}>
                   <Paid fontSize="large" color="primary" style={{ color: 'white', backgroundColor: "#34495E", borderRadius: '10px', padding: '5px' }} />
 
-                    <Typography style={{ fontSize:'26px',fontWeight:'500',color:'#010929' }}>100</Typography>
+                    <Typography style={{ fontSize:'26px',fontWeight:'500',color:'#010929' }}>{details.totalSale}</Typography>
                   </div>
                 </Grid>
                 <Grid item>
@@ -175,8 +175,8 @@ export const Dashboard = () => {
               </Grid>
               <Grid item style={{ textAlign: 'right' }}>
                 <div>
-                  <Typography style={{ fontSize:'15px',fontWeight:'400',color:'#010929' }}>Compared to Oct 2023</Typography>
-                </div>
+                <Typography style={{ fontSize:'12px',fontWeight:'400',color:'#010929',marginTop:'10px' }}>Compared {dateRange.startDate} to {dateRange.endDate} </Typography>
+ </div>
               </Grid>
             </CardContent>
           </Card>
