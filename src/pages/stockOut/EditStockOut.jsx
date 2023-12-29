@@ -3,6 +3,8 @@ import { TextField, Button, MenuItem } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./editStockOut.scss";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const EditStockOut = (props) => {
   const { id } = props;
@@ -11,18 +13,15 @@ export const EditStockOut = (props) => {
   const [formData, setFormData] = useState({
     stockOutId: "",
     productId: "",
+    productName:"",
     vehicleId: "",
+    vehicleNumber:"",
     quantity: "",
     dateOut: "",
   });
 
   const [open, setOpen] = useState(false);
 
-  const [productOptions, setProductOptions] = useState([]);
-  const [vehicleOptions, setVehicleOptions] = useState([]);
-
-  const [selectedProduct, setSelectedProduct] = useState("");
-  const [selectedVehicle, setSelectedVehicle] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,18 +29,20 @@ export const EditStockOut = (props) => {
         const response = await axios.get(
           `http://localhost:8080/api/v1/stock-out/getById/${id}`
         );
-        const { stockOutId, productId, vehicleId, quantity, dateOut } =
+        const { stockOutId, product, vehicle, quantity, dateOut } =
           response.data || {};
+
         setFormData({
           stockOutId,
-          productId,
-          vehicleId,
+          productId:product?.productId || '',
+          productName: product?.productName || '',
+          vehicleId:vehicle?.vehicleId || '',
+          vehicleNumber:vehicle?.vehicleNumber || '',
           quantity,
           dateOut,
         });
         console.log(response.data);
-        setSelectedProduct(productId);
-        setSelectedVehicle(vehicleId);
+
         setOpen(true);
       } catch (error) {
         console.error("Error fetching stock out details:", error);
@@ -50,79 +51,99 @@ export const EditStockOut = (props) => {
 
     fetchData();
   }, [id]);
-
-  const fetchOptions = async (url, setState, key) => {
+  console.log("formdata",formData);
+  
+  const [productOptions, setProductOptions] = useState([]);
+  const [selectedProduct, setSelectedPrduct] = useState(null);
+  
+  const fetchProduct = async () => {
     try {
-      const response = await axios.get(url);
-      const data = response.data;
-      const options = data.map((option) => (
-        <MenuItem key={option[key]} value={option[key]} data-id={option.id}>
-          {option[key]}
+      const response = await axios.get("http://localhost:8080/api/v1/product/all");
+      const productData = response.data;
+      console.log(productData)
+      const productOptions = productData.map((product) => (
+        <MenuItem key={product.productId} value={product.productId}>
+          {product.productName}
         </MenuItem>
       ));
-
-      setState(options); // Save options in state
+      setProductOptions(productOptions);
     } catch (error) {
-      console.error(`Error fetching ${key}s:`, error);
+      console.error("Error fetching product:", error);
     }
   };
-
   useEffect(() => {
-    fetchOptions(
-      "http://localhost:8080/api/v1/product/all",
-      setProductOptions,
-      "productName"
-    );
-    fetchOptions(
-      "http://localhost:8080/api/v1/vehicle/all",
-      setVehicleOptions,
-      "vehicleNumber"
-    );
+    fetchProduct();
   }, []);
 
-  const handleSelectChange = (event, setSelectState, setFormState, key) => {
-    const selectedValue = event.target.value;
+
+  const [vehicleOptions, setVehicleOptions] = useState([]);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
   
-    setSelectState(selectedValue);
-    setFormState((prevFormData) => ({
-      ...prevFormData,
-      [key]: selectedValue,
-      [`${key}Id`]: selectedValue, // Corrected to use selectedValue instead of selectedId
-    }));
+  const fetchVehicle = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/v1/vehicle/all");
+      const vehicleData = response.data;
+      console.log(vehicleData)
+      const vehicleOptions = vehicleData.map((vehicle) => (
+        <MenuItem key={vehicle.vehicleId} value={vehicle.vehicleId}>
+          {vehicle.vehicleNumber}
+        </MenuItem>
+      ));
+      setVehicleOptions(vehicleOptions);
+    } catch (error) {
+      console.error("Error fetching vehicle:", error);
+    }
   };
-  
+  useEffect(() => {
+    fetchVehicle();
+  }, []);
+
+  const handleRouteChange = (event) => {
+    const selectedProduct = event.target.value;
+    const selectedVehicle = event.target.value;
+    setSelectedPrduct(selectedProduct);
+    setSelectedVehicle(selectedVehicle);
+};
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    const updatedFormData = {
-      ...formData,
-      stockOutId: id,
-      productId: selectedProduct,
-      vehicleId: selectedVehicle,
-    };
-
     try {
-      const response = await axios.put(
-        `http://localhost:8080/api/v1/stock-out/update`,
-        updatedFormData
-      );
+        const response = await axios.put(
+            `http://localhost:8080/api/v1/stock-out/update`,
+            {
+                ...formData,
+            }
+        );
 
-      console.log("Stock Out updated successfully:", response.data);
+        console.log('Shop updated successfully:', response.data);
 
-      handleClose();
-      window.location.reload();
+        handleClose();
+        // Redirect to the shop list page or any other page
+        toast.success("Stock out updated successfully:")
+        handleClose();
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
+
     } catch (error) {
-      console.error("Error updating stock Out:", error);
+        console.error('Error updating shop:', error);
+        toast.error(`Error updating shop: ${errorMessage}`);
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
     }
-  };
+};
+  
 
   return (
     <div>
+      <ToastContainer />
       <form onSubmit={handleFormSubmit} className="edit-shop-form">
         <div>
           <TextField
@@ -136,8 +157,17 @@ export const EditStockOut = (props) => {
             size="small"
           />
         </div>
-
         <TextField
+              variant="outlined"
+              label="Product ID"
+              name="productId"
+              value={formData.productName}
+              InputProps={{ readOnly: true }}
+              fullWidth
+              margin="normal"
+              size="small"
+            />
+        {/* <TextField
           id="outlined-select-currency1"
           select
           label="Select Product"
@@ -150,9 +180,18 @@ export const EditStockOut = (props) => {
           }
         >
           {productOptions}
-        </TextField>
-
-        <TextField
+        </TextField> */}
+<TextField
+              variant="outlined"
+              label="Vehicle Number"
+              name="vehicleId"
+              value={formData.vehicleNumber}
+              InputProps={{ readOnly: true }}
+              fullWidth
+              margin="normal"
+              size="small"
+            />
+        {/* <TextField
           id="outlined-select-currency2"
           select
           label="Select Vehicle Number"
@@ -165,7 +204,7 @@ export const EditStockOut = (props) => {
           }
         >
           {vehicleOptions}
-        </TextField>
+        </TextField> */}
 
         <div>
           <TextField

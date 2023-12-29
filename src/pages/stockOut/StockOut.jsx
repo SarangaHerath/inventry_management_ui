@@ -27,6 +27,8 @@ import { Link } from "react-router-dom";
 import { Delete, Edit } from "@mui/icons-material";
 import { AddStockOut } from "./AddStockOut";
 import { EditStockOut } from "./EditStockOut";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function createData(stockOutId, product_id, vehicle_id, quantity, date_out) {
   return {
@@ -274,8 +276,12 @@ export const StockOut = () => {
 
       // Clear the selected items
       setSelected([]);
+      toast.success("Stock out delete successfully:")
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
-      console.error("Error deleting data:", error);
+      console.error("Error deleting stock out:", error);
     }
   };
   const handleSelectAllClick = (event) => {
@@ -353,6 +359,7 @@ export const StockOut = () => {
           marginBottom: "20px",
         }}
       >
+        <ToastContainer />
         <Button variant="contained" onClick={handleOpen}>
           Add Stock Out +{" "}
         </Button>

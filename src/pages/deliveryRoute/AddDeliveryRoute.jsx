@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import './addDeliveryRoute.scss'
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 export const AddDeliveryRoute = () => {
   // State to manage form data
@@ -35,9 +37,18 @@ export const AddDeliveryRoute = () => {
       routeName: ''
     });
       // Reload the page
-    window.location.reload();
+      
+      toast.success("Delivery route added successfully:")
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+
     }catch(error){
-      console.error('Error adding product:', error);
+      console.error('Error adding delivery route:', error);
+      toast.error(`Error add delivery route: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
 
     
@@ -45,7 +56,7 @@ export const AddDeliveryRoute = () => {
 
   return (
     <div>
-     
+     <ToastContainer />
       {/* Form for adding a new shop */}
       <form onSubmit={handleFormSubmit} className='add-shop-form'>
       <label className='form-title'>Add New Route</label>
