@@ -89,7 +89,7 @@ export const ChequeDetails = ({ shopId,onClose }) => {
           type="date"
           label="Received Date"
           name="receivedDate"
-          value={formData.receivedDate}
+          value={formData?.receivedDate||0}
           onChange={handleInputChange}
           required
           className='textfield'
@@ -98,9 +98,9 @@ export const ChequeDetails = ({ shopId,onClose }) => {
         <TextField
           variant="outlined"
           type="date"
-          label="Bank Date"
+         label="Bank Date"
           name="bankDate"
-          value={formData.bankDate}
+          value={formData?.bankDate||0}
           onChange={handleInputChange}
           required
           className='textfield'

@@ -5,10 +5,15 @@
   height: 100%;
   gap: 20px;
   .left-side {
-    flex: 3; // Takes up 60% of the container
+    flex: 4; // Takes up 60% of the container
     //padding: 20px;
     // border: 1px solid #ccc;
-
+    
+    // max-height: calc(100vh - 150px);
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: space-between;
+   
     .form {
       margin-bottom: 20px;
       background-color: #fff;
@@ -23,7 +28,7 @@
        
         justify-content: space-between;
         .MuiTextField-root {
-          width: 220px; // Adjust the width of the TextField
+          width: 200px; // Adjust the width of the TextField
         }
 
         .MuiButton-root {
@@ -50,11 +55,15 @@
           display: flex;
           gap: 10px; // Adjust the gap between TextField and Button as needed
           align-items: center;
+
         }
         .product-details{
           display: flex;
           align-items: center;
           gap: 10px;
+          .MuiTextField-root {
+            width: 140px; // Adjust the width of the TextField
+          }
         }
       }
      
@@ -141,7 +150,7 @@
        
         justify-content: space-between;
         .MuiTextField-root {
-          width: 220px; // Adjust the width of the TextField
+          width: 200px; // Adjust the width of the TextField
         }
 
         .MuiButton-root {
@@ -256,6 +265,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
+
     
     overflow-y: auto;
     .form-input {
@@ -269,7 +280,7 @@
         display: flex;
         justify-content: space-between;
         .MuiTextField-root {
-          // width: 100%; // Adjust the width of the TextField
+          //width: 200px; // Adjust the width of the TextField
         }
         .total{
           width: 100%;
