@@ -129,7 +129,8 @@ const fetchProduct = async (id) => {
 
     const productOptions = productData.map((product) => (
       <MenuItem key={product.productId} value={product.productId}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'20px',width:'100%'}}>
+         {product.productName}  :-  {product.weight}g
+        {/* <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'20px',width:'100%'}}>
           <div>
           {product.productName}
           </div>
@@ -137,7 +138,7 @@ const fetchProduct = async (id) => {
           {product.weight}g
           </div>
         
-        </div>
+        </div> */}
          
       </MenuItem>
     ));
@@ -162,7 +163,8 @@ const fetchFreeProduct = async (id) => {
     console.log(productData)
     const productOptions = productData.map((product) => (
       <MenuItem key={product.product.productId} value={product.product.productId}>
-        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:'20px', width:'100%'}}>
+        {product.product.productName} :-  {product.product.weight}g
+        {/* <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:'20px', width:'100%'}}>
           <div>
             {product.product.productName}
             {product.product.quantity === 0 && (
@@ -172,7 +174,7 @@ const fetchFreeProduct = async (id) => {
           <div style={{backgroundColor:'#D5D8DC', height:'30px', width:'70px', borderRadius:'5px', display:'flex', justifyContent:'center', alignItems:'center'}}>
             {product.product.weight}g
           </div>
-        </div>
+        </div> */}
       </MenuItem>
     ));
     
@@ -272,11 +274,11 @@ const handleQuantityChange = (productId) => async (event) => {
     const selectedFreeProduct = selectedFreeProducts.find((product) => product.productId === productId);
 
     // Compare the entered quantity with the available quantity
-    if (newQuantity > (productDetailsData.quantity- (selectedFreeProduct?.quantity || 0))) {
+    if (0<newQuantity > (productDetailsData.quantity- (selectedFreeProduct?.quantity || 0))) {
       // Display an error message
       setQuantityErrors((prevErrors) => ({
         ...prevErrors,
-        [productId]: `Available Quantity: ${productDetailsData.quantity-selectedFreeProduct?.quantity || 0}`,
+        [productId]: `Available Quantity: ${productDetailsData.quantity-selectedFreeProduct?.quantity}`,
       }));
     } else {
       // Clear the error message
@@ -321,7 +323,7 @@ const handleFreeQuantityChange = (productId) => async (event) => {
     const selectedProduct = selectedProducts.find((product) => product.productId === productId);
 
     // Compare the entered quantity with the available quantity
-    if (newQuantity > (productDetailsData.quantity - selectedProduct.quantity)) {
+    if (0<newQuantity > (productDetailsData.quantity - selectedProduct.quantity)) {
       // Display an error message
       setQuantityFreeErrors((prevErrors) => ({
         ...prevErrors,
@@ -415,6 +417,7 @@ const handleCreditAmountChange = (event) => {
   const amount = parseFloat(event.target.value) || 0;
   setCreditAmount(amount);
 };
+
 const handlediscountItemAmountChange = (event) => {
   const amount = parseFloat(event.target.value) || 0;
   setDiscountItemAmount(amount);
@@ -566,7 +569,8 @@ const handleAddSale = async () => {
                       {selectedShop && shopDetails && (
             <div className='customer-details'>
             
-              <div> <span>{shopDetails.shopName} | {shopDetails.phoneNumber}</span></div>
+              <span>{shopDetails.shopName}</span>
+              <span>{shopDetails.phoneNumber}</span>
               <span>{shopDetails.address}</span>
             
             </div>
@@ -582,7 +586,7 @@ const handleAddSale = async () => {
                 <TextField
                   id="outlined-select-currency2"
                   select
-                  label="Select Product Category"
+                  label="Select Category"
                   size="small"
                   value={selectedCategory}
                   onChange={handleCategoryChange}
@@ -663,6 +667,7 @@ const handleAddSale = async () => {
                         type="number"
                         value={product.quantity}
                         onChange={handleQuantityChange(product.productId)}
+                        min={0}
                       ></input>
                        {quantityErrors[product.productId] && (
                         <span className="error-message">{quantityErrors[product.productId]}</span>
@@ -742,6 +747,7 @@ const handleAddSale = async () => {
                         type="number"
                         value={product.quantity}
                         onChange={handleFreeQuantityChange(product.productId)}
+                        min={0}
                       ></input>
                        {quantityFreeErrors[product.productId] && (
                         <span className="error-message">{quantityFreeErrors[product.productId]}</span>

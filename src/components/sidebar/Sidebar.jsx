@@ -161,7 +161,7 @@ export const Sidebar = ({ children }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsOpen(window.innerWidth > 1068); // Adjust the threshold as needed
+      setIsOpen(window.innerWidth > 1368); // Adjust the threshold as needed
     };
 
     handleResize();
