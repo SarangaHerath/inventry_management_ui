@@ -230,28 +230,53 @@ export const DeliveryRoute = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+  // const handleDelete = async (id) => {
+  //   try {
+  //     // Send DELETE request to the API endpoint
+  //     await axios.delete(`http://localhost:8080/api/v1/route/delete/${id}`);
+
+  //     // Update the state to reflect the changes (remove the deleted row)
+  //     const updatedRows = rows.filter((row) => row.id !== id);
+  //     setRows(updatedRows);
+
+  //     // Clear the selected items
+  //     setSelected([]);
+  //     toast.success("Delivery route delete successfully:")
+  //     handleClose();
+  //     setTimeout(() => {
+  //       window.location.reload();
+  //     }, 1500);
+  //   } catch (error) {
+  //     console.error("Error deleting data:", error);
+  //     toast.error(`Error Delivery route delete: ${errorMessage}`);
+  //     setTimeout(() => {
+  //       window.location.reload();
+  //     }, 1500);
+  //   }
+  // };
+
+
   const handleDelete = async (id) => {
     try {
       // Send DELETE request to the API endpoint
       await axios.delete(`http://localhost:8080/api/v1/route/delete/${id}`);
-
+  
       // Update the state to reflect the changes (remove the deleted row)
       const updatedRows = rows.filter((row) => row.id !== id);
       setRows(updatedRows);
-
+  
       // Clear the selected items
       setSelected([]);
-      toast.success("Delivery route delete successfully:")
-      handleClose();
+      toast.success("Delivery route deleted successfully:");
       setTimeout(() => {
         window.location.reload();
       }, 1500);
     } catch (error) {
       console.error("Error deleting data:", error);
-      toast.error(`Error Delivery route delete: ${errorMessage}`);
+      toast.error(`Warning! Can't delete – this route's part of the shop crew`);
       setTimeout(() => {
         window.location.reload();
-      }, 1500);
+      }, 2500);
     }
   };
   const handleSelectAllClick = (event) => {

@@ -506,17 +506,17 @@ const handleAddSale = async () => {
       // Handle success, e.g., show a success message, reset state, etc.
       console.log("Sale added successfully:", response.data);
   
-      toast.success("Sale create successfully:")
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500);
+      toast.success("Sales create successfully:")
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       // Handle error, e.g., show an error message
       console.error("Error adding sale:", error);
-      toast.error(`Error create sale: ${errorMessage}`);
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500);
+      toast.error(`Error delete product category: ${errorMessage}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
   };
   const handleRemoveProduct = (productId) => {
@@ -533,6 +533,7 @@ const handleAddSale = async () => {
 
   return (
     <div className="container1">
+       
       <div className="left-side">
         <div className="form">
           {/* First input field with button */}

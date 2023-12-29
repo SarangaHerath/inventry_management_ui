@@ -234,25 +234,26 @@ export const ProductCategory = () => {
     try {
       // Send DELETE request to the API endpoint
       await axios.delete(`http://localhost:8080/api/v1/category/delete/${id}`);
-
+  
       // Update the state to reflect the changes (remove the deleted row)
-      const updatedRows = rows.filter((row) => row.id !== id);
+      const updatedRows = rows.filter((row) => row.categoryId !== id);
       setRows(updatedRows);
-
+  
       // Clear the selected items
       setSelected([]);
-      toast.success("Cheque delete successfully:")
+      toast.success("Product category deleted successfully:");
       setTimeout(() => {
         window.location.reload();
       }, 1500);
     } catch (error) {
       console.error("Error deleting data:", error);
-      toast.error(`Error updating cheque: ${errorMessage}`);
+      toast.error(`Warning! Can't delete – this category's part of the product crew`);
       setTimeout(() => {
         window.location.reload();
-      }, 1500);
+      }, 2500);
     }
   };
+  
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
