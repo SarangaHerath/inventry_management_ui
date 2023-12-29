@@ -55,6 +55,30 @@ export const Dashboard = () => {
   };
   fetchData()
   }, []);
+
+  const [rows, setRows] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/v1/cheque/getAll"
+        );
+        const responseData = response.data;
+        console.log(responseData);
+        // Assuming your response data has a property named 'newRows'
+        const newRows = responseData.newRows;
+
+        console.log(newRows);
+        setRows(newRows);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="dashboard-container">
       <Typography variant="h6" gutterBottom>
@@ -183,7 +207,20 @@ export const Dashboard = () => {
         </Grid>
         
       </Grid>
-    
+    <Grid>
+    {rows.map((row, index) => (
+        <Grid item key={index} xs={12} sm={6} md={3}>
+          <Card>
+            {/* Customize the content based on your row data */}
+            <CardContent>
+              <Typography>{row.title}</Typography>
+              {/* Add more content based on your row structure */}
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
+      
+    </Grid>
       
     </div>
   );
