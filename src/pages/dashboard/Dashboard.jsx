@@ -66,11 +66,8 @@ export const Dashboard = () => {
         );
         const responseData = response.data;
         console.log(responseData);
-        // Assuming your response data has a property named 'newRows'
-        const newRows = responseData.newRows;
-
-        console.log(newRows);
-        setRows(newRows);
+ 
+        setRows(responseData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -207,20 +204,43 @@ export const Dashboard = () => {
         </Grid>
         
       </Grid>
-    <Grid>
-    {rows.map((row, index) => (
-        <Grid item key={index} xs={12} sm={6} md={3}>
-          <Card>
+      <Typography variant="h6" gutterBottom>
+        CHEQUE LIST
+      </Typography>
+    <Grid container spacing={3} className="card-container">
+    <Grid item xs={12} sm={12} md={4}>
+  <div style={{ height: '350px', overflowY: 'auto' }}>
+    {/* List of Containers for Rows */}
+    {rows && rows.length > 0 ? (
+      rows.map((row, index) => (
+        <Grid item key={index}>
+          <Card style={{height:'50px', marginBottom: '16px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', }}>
             {/* Customize the content based on your row data */}
-            <CardContent>
-              <Typography>{row.title}</Typography>
+            <CardContent style={{display:'flex',justifyContent:'space-between',alignItems:'center'}} >
+            <div>
+             <Typography fontSize={12}>{row.shop.shopName}</Typography>
+              <Typography fontSize={12}>{row.chequeNumber}</Typography>
+            </div>
+             
+              <Typography fontSize={12}>{row.bankDate}</Typography>
+            
               {/* Add more content based on your row structure */}
             </CardContent>
           </Card>
         </Grid>
-      ))}
-      
+      ))
+    ) : (
+      <p>No rows to display.</p>
+    )}
+  </div>
+</Grid>
+
+ 
+
+
+   
     </Grid>
+  
       
     </div>
   );
