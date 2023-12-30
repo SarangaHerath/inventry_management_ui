@@ -9,8 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest",
-    "test:coverage": "jest --coverage"
-  },
+    "test:coverage": "jest --config=/jest.config.js --coverage" },
   "jest": {
     "testMatch": [
       "**/__tests__/**/*.[jt]s?(x)",
