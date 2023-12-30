@@ -513,7 +513,7 @@ const handleAddSale = async () => {
     } catch (error) {
       // Handle error, e.g., show an error message
       console.error("Error adding sale:", error);
-      toast.error(`Error delete product category: ${errorMessage}`);
+      toast.error(`Error delete product sale: ${errorMessage}`);
       setTimeout(() => {
         window.location.reload();
       }, 1500);

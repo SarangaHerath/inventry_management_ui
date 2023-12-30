@@ -25,6 +25,9 @@
   .grid-item {
     display: flex;
     gap: 8px;
+    .MuiTextField-root {
+      width: 200px; // Adjust the width of the TextField
+    }
   }
 
   .centered-label {

@@ -208,17 +208,7 @@ export const Dashboard = () => {
         
       </Grid>
     <Grid>
-    {rows.map((row, index) => (
-        <Grid item key={index} xs={12} sm={6} md={3}>
-          <Card>
-            {/* Customize the content based on your row data */}
-            <CardContent>
-              <Typography>{row.title}</Typography>
-              {/* Add more content based on your row structure */}
-            </CardContent>
-          </Card>
-        </Grid>
-      ))}
+   
       
     </Grid>
       
