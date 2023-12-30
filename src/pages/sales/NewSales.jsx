@@ -1,7 +1,7 @@
 // NewSales.jsx
 
 import React, { useEffect, useState } from 'react';
-import './NewSales.scss'; // Import the SCSS file
+import './newSales.scss';
 import { Paper, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, TextField, MenuItem, Button, Dialog, Grow, IconButton } from '@mui/material';
 import { Label } from 'recharts';
 import { AddNewProducts } from '../products/AddNewProducts';

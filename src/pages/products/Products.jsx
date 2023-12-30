@@ -25,16 +25,19 @@ import { visuallyHidden } from '@mui/utils';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grow, LinearProgress, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { AddNewProducts } from './AddNewProducts';
+import { EditProducts } from './EditProducts';
+import {Delete, Edit } from '@mui/icons-material';
 
 
-function createData(id, name, weight, date, unitPrice, quantity) {
+function createData(productId, name, weight, date, unitPrice, quantity,category) {
   return {
-    id,
+    productId,
     name,
     weight,
     date,
     unitPrice,
     quantity,
+    category
   };
 }
 
@@ -96,10 +99,29 @@ const headCells = [
     disablePadding: false,
     label: 'Quantity',
   },
+  {
+    id: 'category',
+    numeric: true,
+    disablePadding: false,
+    label: 'Category',
+  },
+  {
+    id: "action",
+    numeric: false,
+    disablePadding: false,
+    label: "Actions",
+  },
+
 ];
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+  const { 
+    onSelectAllClick, 
+    order, 
+    orderBy, 
+    numSelected, 
+    rowCount, 
+    onRequestSort } =
     props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -154,7 +176,9 @@ function EnhancedTableToolbar(props) {
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            alpha(
+              theme.palette.primary.main, 
+              theme.palette.action.activatedOpacity),
         }),
       }}
     >
@@ -212,15 +236,16 @@ export const Products = () => {
       try {
         const response = await axios.get('http://localhost:8080/api/v1/product/all');
         const responseData = response.data;
-
+console.log("Responsesss",responseData);
         const newRows = responseData.map((data) =>
           createData(
-            data.id,
+            data.productId,
             data.productName,
             data.weight,
             data.date,
             data.unitPrice,
-            data.quantity
+            data.quantity,
+            data.category
           )
         );
 console.log(newRows);
@@ -237,6 +262,22 @@ console.log(newRows);
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+  };
+  const handleDelete = async (id) => {
+    console.log(id)
+    try {
+      // Send DELETE request to the API endpoint
+      await axios.delete(`http://localhost:8080/api/v1/product/delete/${id}`);
+  
+      // Update the state to reflect the changes (remove the deleted row)
+      const updatedRows = rows.filter((row) => row.productId !== id); // Use row.productId instead of row.id
+      setRows(updatedRows);
+  
+      // Clear the selected items
+      setSelected([]);
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
   };
 
   const handleSelectAllClick = (event) => {
@@ -283,6 +324,10 @@ console.log(newRows);
   const isSelected = (id) => selected.indexOf(id) !== -1;
   const [open, setOpen] = React.useState(false);
 
+  //delete& edit
+  const [openedit, setOpenEdit] = React.useState(false);
+  const [selectedProducts, setSelectedProduct] = React.useState(null);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -298,6 +343,15 @@ console.log(newRows);
     handleClose();
   };
 
+  const handleOpenEdit = (row) => {
+    setSelectedProduct(row);
+    setOpenEdit(true);
+  };
+
+  const handleEditClose = () => {
+    setOpenEdit(false);
+  };
+
   return (
     <Box sx={{  }}>
     <div style={{ display: 'flex', justifyContent: 'flex-end',marginBottom:"20px" }}>
@@ -310,6 +364,16 @@ console.log(newRows);
         transitionDuration={500} >
     <AddNewProducts></AddNewProducts>
     </Dialog>
+
+    {/* edit and delete */}
+    <Dialog
+        open={openedit}
+        onClose={handleEditClose}
+        TransitionComponent={Grow}
+        transitionDuration={500}
+      >
+       <EditProducts id={selectedProducts ? selectedProducts.productId : null} />
+      </Dialog>
 
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -332,7 +396,7 @@ console.log(newRows);
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
+                
                     const labelId = `enhanced-table-checkbox-${index}`;
                     const uniqueKey = `row-${row.id}`; 
                     return (
@@ -342,16 +406,36 @@ console.log(newRows);
                        
                         tabIndex={-1}
                         key={uniqueKey} 
-                        selected={isItemSelected}
                         sx={{ cursor: 'pointer' }}
                       >
-                      
-                       
                         <TableCell align="left">{row.name}</TableCell>
                         <TableCell align="left">{row.weight}</TableCell>
                         <TableCell align="left">{row.date}</TableCell>
                         <TableCell align="right">{row.unitPrice}</TableCell>
                         <TableCell align="right">{row.quantity}</TableCell>
+                        <TableCell align="right">{row.category.categoryName}</TableCell>
+
+                        {/* edit and delete */}
+                        <TableCell align="left">
+                            <IconButton
+                             sx={{color:'#3498DB'}}
+                              aria-label="Edit"
+                              onClick={() => handleOpenEdit(row)} // Pass the row to handleOpenEdit
+                  >
+                            
+                              <Edit />
+                            </IconButton>
+                            <IconButton
+                              aria-label="Delete"
+                              onClick={() => handleDelete(row.productId)}
+                              sx={{color:'#E74C3C'}}
+                            >
+                              <Delete />
+                            </IconButton>
+                            
+                          </TableCell>
+
+                          
                       </TableRow>
                     );
                   })}

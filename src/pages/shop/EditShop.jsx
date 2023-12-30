@@ -21,7 +21,7 @@ export const EditShop = (props) => {
   });
 
   const [open, setOpen] = useState(false);
-
+-
   useEffect(() => {
     const fetchData = async () => {
         try {
@@ -128,8 +128,8 @@ export const EditShop = (props) => {
           <TextField
               variant="outlined"
               label="Delivery Route ID"
-              name="shopId"
-              value={formData.routeName}
+              name="deliveryRouteId"
+              value={formData.deliveryRouteId}
               InputProps={{ readOnly: true }}
               fullWidth
               margin="normal"
