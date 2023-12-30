@@ -11,8 +11,13 @@
     "test": "jest --coverage"
   },
   "jest": {
-    "testMatch": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
-    "testPathIgnorePatterns": ["/node_modules/"]
+    "testMatch": [
+      "**/__tests__/**/*.[jt]s?(x)",
+      "**/?(*.)+(spec|test).[tj]s?(x)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
