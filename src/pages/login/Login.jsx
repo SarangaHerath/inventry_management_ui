@@ -25,7 +25,7 @@ const navigate=useNavigate();
     
     try {
       // Make the API call
-      const response = await axios.post('http://localhost:8080/api/v1/user/login', formData);
+      const response = await axios.post('https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/user/login', formData);
       
       // Assuming the response contains some data indicating successful login
       console.log('Login Successful:', response.data);

@@ -242,7 +242,7 @@ export const PaymentChequeDetails = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/cheque/getAll"
+          "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/cheque/getAll"
         );
         const responseData = response.data;
         console.log(responseData);
@@ -284,7 +284,7 @@ export const PaymentChequeDetails = () => {
     try {
       // Send DELETE request to the API endpoint
       await axios.delete(
-        `http://localhost:8080/api/v1/cheque/delete/${chequeId}`
+        `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/cheque/delete/${chequeId}`
       );
       toast.success("Cheque delete successfully:")
       setTimeout(() => {

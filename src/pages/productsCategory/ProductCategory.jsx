@@ -207,7 +207,7 @@ export const ProductCategory = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/category/all"
+          "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/category/all"
         );
         const responseData = response.data;
         console.log(responseData);
@@ -233,7 +233,7 @@ export const ProductCategory = () => {
   const handleDelete = async (id) => {
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`http://localhost:8080/api/v1/category/delete/${id}`);
+      await axios.delete(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/category/delete/${id}`);
   
       // Update the state to reflect the changes (remove the deleted row)
       const updatedRows = rows.filter((row) => row.categoryId !== id);

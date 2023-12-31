@@ -28,7 +28,7 @@ export const EditProducts = (props) => {
     const fetchData = async () => {
       console.log("Fetching data for id:", id);
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/product/get-by-id/${id}`);
+        const response = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/product/get-by-id/${id}`);
         const { productId, productName, weight, date, quantity, unitPrice, category } = response.data || {};
         setCategoryData([category]); // Wrap the category in an array
         setFormData({
@@ -64,7 +64,7 @@ export const EditProducts = (props) => {
     event.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/v1/product/update`,
+        `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/product/update`,
         formData
       );
   

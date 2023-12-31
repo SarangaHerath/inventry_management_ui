@@ -20,7 +20,7 @@ export const AddNewShop = () => {
     const fetchDeliveryRoutes = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:8080/api/v1/route/all'
+          'https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/route/all'
         );
         const routes = response.data;
 
@@ -41,7 +41,7 @@ export const AddNewShop = () => {
     try {
       // Send a POST request to the backend with the form data
       const response = await axios.post(
-        'http://localhost:8080/api/v1/shop/add-shop',
+        'https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/shop/add-shop',
         formData
       );
 

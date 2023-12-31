@@ -191,7 +191,7 @@ export const SalesInvoiceDetails = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/v1/sales-invoices/getAllSalesDetails"
+        "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/sales-invoices/getAllSalesDetails"
       );
       const responseData = response.data;
       console.log(responseData);
@@ -224,7 +224,7 @@ export const SalesInvoiceDetails = () => {
   const handleDelete = async (id) => {
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`http://localhost:8080/api/v1/sales-invoice-details/delete/${id}`);
+      await axios.delete(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/sales-invoice-details/delete/${id}`);
 
       // Update the state to reflect the changes (remove the deleted row)
       const updatedRows = rows.filter((row) => row.id !== id);
