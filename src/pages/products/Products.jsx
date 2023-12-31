@@ -234,7 +234,7 @@ export const Products = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/v1/product/all');
+        const response = await axios.get('https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/product/all');
         const responseData = response.data;
 console.log("Responsesss",responseData);
         const newRows = responseData.map((data) =>
@@ -267,7 +267,7 @@ console.log(newRows);
     console.log(id)
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`http://localhost:8080/api/v1/product/delete/${id}`);
+      await axios.delete(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/product/delete/${id}`);
   
       // Update the state to reflect the changes (remove the deleted row)
       const updatedRows = rows.filter((row) => row.productId !== id); // Use row.productId instead of row.id

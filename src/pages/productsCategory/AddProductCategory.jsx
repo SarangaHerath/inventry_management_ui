@@ -29,7 +29,7 @@ export const AddProductCategory = () => {
     // Implement logic to submit form data (e.g., send a request to the server)
     try{
       const response = await axios.post(
-        'http://localhost:8080/api/v1/category/save',
+        'https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/category/save',
         formData
       );
 

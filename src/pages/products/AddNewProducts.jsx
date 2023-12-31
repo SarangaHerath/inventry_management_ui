@@ -26,7 +26,7 @@ export const AddNewProducts = () => {
     const fetchCategory = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/category/all"
+          "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/category/all"
         );
         const category = response.data;
 
@@ -44,7 +44,7 @@ export const AddNewProducts = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/product/add-product",
+        "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/product/add-product",
         formData
       );
 

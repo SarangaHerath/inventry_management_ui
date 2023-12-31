@@ -38,7 +38,7 @@ export const Dashboard = () => {
         startDate: formattedStartDate,
       }));
         const response = await axios.get(
-          `http://localhost:8080/api/v1/sales-invoices/totalBySelectedDateRange/${formattedStartDate}/${dateRange.endDate}`,
+          `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/sales-invoices/totalBySelectedDateRange/${formattedStartDate}/${dateRange.endDate}`,
           {
               withCredentials: true,
               headers: {
@@ -62,7 +62,7 @@ export const Dashboard = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/cheque/getAll"
+          "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/cheque/getAll"
         );
         const responseData = response.data;
         console.log(responseData);

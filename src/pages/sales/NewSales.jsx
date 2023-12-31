@@ -30,7 +30,7 @@ export const NewSales = () => {
 
   const fetchDeliveryRoute = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/v1/route/all");
+      const response = await axios.get("https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/route/all");
       const routeData = response.data;
       const routeOptions = routeData.map((droute) => (
         <MenuItem key={droute.id} value={droute.id}>
@@ -45,7 +45,7 @@ export const NewSales = () => {
   
   const fetchShops = async (deliveryRouteId) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/shop/by-delivery-route/${deliveryRouteId}`);
+      const response = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/shop/by-delivery-route/${deliveryRouteId}`);
       const shopData = response.data;
       // console.log(deliveryRouteId)
       const shopOptions = shopData.map((shop) => (
@@ -62,7 +62,7 @@ export const NewSales = () => {
   useEffect(() => {
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/category/all`);
+      const response = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/category/all`);
       const categoryData = response.data;
        console.log("Category Data",categoryData)
       const categoryOptions = categoryData.map((category) => (
@@ -80,7 +80,7 @@ export const NewSales = () => {
 }, []);
   const fetchShopDetails = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/shop/get-by-id/${id}`);
+      const response = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/shop/get-by-id/${id}`);
       const shopDetailsData = response.data;
       setShopDetails(shopDetailsData);
     } catch (error) {
@@ -126,7 +126,7 @@ const [availableQuantities, setAvailableQuantities] = useState({});
 console.log(availableQuantities)
 const fetchProduct = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/v1/stock-out/productsByCategory/${id}`);
+    const response = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/productsByCategory/${id}`);
     const productData = response.data;
 
     const productOptions = productData.map((product) => (
@@ -160,7 +160,7 @@ const fetchProduct = async (id) => {
 };
 const fetchFreeProduct = async (id) => {
   try {
-    const response = await axios.get("http://localhost:8080/api/v1/stock-out/all");
+    const response = await axios.get("https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/all");
     const productData = response.data;
     console.log(productData)
     const productOptions = productData.map((product) => (
@@ -211,7 +211,7 @@ const handleProductIdsChange = async (event) => {
   const updatedSelectedProducts = await Promise.all(
     selectedProductIds.map(async (productId) => {
       try {
-        const productDetailsResponse = await axios.get(`http://localhost:8080/api/v1/stock-out/product-details/${productId}`);
+        const productDetailsResponse = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/product-details/${productId}`);
         const productDetailsData = productDetailsResponse.data[0]; // Access the first item in the array
 
         return {
@@ -239,7 +239,7 @@ const handleFreeProductIdsChange = async (event) => {
   const updatedSelectedFreeProducts = await Promise.all(
     selectedFreeProductIds.map(async (productId) => {
       try {
-        const productDetailsResponse = await axios.get(`http://localhost:8080/api/v1/stock-out/product-details/${productId}`);
+        const productDetailsResponse = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/product-details/${productId}`);
         const productDetailsData = productDetailsResponse.data[0]; // Access the first item in the array
 
         return {
@@ -269,7 +269,7 @@ const handleQuantityChange = (productId) => async (event) => {
 
 
   try {
-    const productDetailsResponse = await axios.get(`http://localhost:8080/api/v1/stock-out/product-details/${productId}`);
+    const productDetailsResponse = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/product-details/${productId}`);
     const productDetailsData = productDetailsResponse.data[0]; // Access the first item in the array
     console.log(productDetailsData)
 
@@ -317,7 +317,7 @@ const handleFreeQuantityChange = (productId) => async (event) => {
   const newQuantity = parseInt(event.target.value, 10);
 
   try {
-    const productDetailsResponse = await axios.get(`http://localhost:8080/api/v1/stock-out/product-details/${productId}`);
+    const productDetailsResponse = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/product-details/${productId}`);
     const productDetailsData = productDetailsResponse.data[0]; // Access the first item in the array
     console.log(productDetailsData)
 
@@ -501,7 +501,7 @@ const handleAddSale = async () => {
       console.log("Sale Data:", saleData);
   
       // Make a POST request to your backend API to save the sale
-      const response = await axios.post("http://localhost:8080/api/v1/sales-invoices/save", saleData);
+      const response = await axios.post("https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/sales-invoices/save", saleData);
       navigate('/salesInvoice')
       // Handle success, e.g., show a success message, reset state, etc.
       console.log("Sale added successfully:", response.data);
