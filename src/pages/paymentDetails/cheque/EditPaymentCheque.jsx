@@ -32,7 +32,7 @@ export const EditPaymentCheque = (props) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/cheque/getById/${id}`
+          `http://localhost:8080/api/v1/cheque/getById/${id}`
         );
         const { chequeId,shopId,chequeNumber,receivedDate,bankDate,amount,remark } =
           response.data || {};
@@ -80,7 +80,7 @@ export const EditPaymentCheque = (props) => {
 
   useEffect(() => {
     fetchOptions(
-      "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/shop/all",
+      "http://localhost:8080/api/v1/shop/all",
       setShopOptions,
       "shopName"
     );
@@ -113,7 +113,7 @@ export const EditPaymentCheque = (props) => {
 
     try {
       const response = await axios.put(
-        `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/cheque/update`,
+        `http://localhost:8080/api/v1/cheque/update`,
         updatedFormData
       );
 

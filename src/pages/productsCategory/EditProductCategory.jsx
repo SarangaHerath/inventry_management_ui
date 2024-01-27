@@ -23,7 +23,7 @@ export const EditProductCategory = (props) => {
     const fetchData = async () => {
       console.log("Fetching data for id:", id);
       try {
-        const response = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/category/getById/${id}`);
+        const response = await axios.get(`http://localhost:8080/api/v1/category/getById/${id}`);
         const { categoryId, categoryName } = response.data || {};
         console.log("Data received:", response.data);
         console.log("id:", categoryId); // Use the renamed variable here
@@ -48,7 +48,7 @@ export const EditProductCategory = (props) => {
 
     try {
       const response = await axios.put(
-        `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/category/update`,
+        `http://localhost:8080/api/v1/category/update`,
         formData
       );
 

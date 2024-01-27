@@ -25,7 +25,7 @@ export const EditShop = (props) => {
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/shop/get-by-id/${id}`);
+            const response = await axios.get(`http://localhost:8080/api/v1/shop/get-by-id/${id}`);
             const { shopId, deliveryRoute, shopName, address, phoneNumber } = response.data || {};
 
             setFormData({
@@ -52,7 +52,7 @@ export const EditShop = (props) => {
   const [selectedRoute, setSelectedRoute] = useState(null);
   const fetchDeliveryRoute = async () => {
     try {
-      const response = await axios.get("https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/route/all");
+      const response = await axios.get("http://localhost:8080/api/v1/route/all");
       const routeData = response.data;
       console.log(routeData)
       const routeOptions = routeData.map((droute) => (
@@ -83,7 +83,7 @@ export const EditShop = (props) => {
 
     try {
         const response = await axios.put(
-            `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/shop/update`,
+            `http://localhost:8080/api/v1/shop/update`,
             {
                 ...formData,
             }

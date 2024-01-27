@@ -227,7 +227,7 @@ export const StockOut = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/all"
+          "http://localhost:8080/api/v1/stock-out/all"
         );
         const responseData = response.data;
         console.log(responseData);
@@ -267,7 +267,7 @@ export const StockOut = () => {
   const handleDelete = async (id) => {
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/delete/${id}`);
+      await axios.delete(`http://localhost:8080/api/v1/stock-out/delete/${id}`);
 
       // Update the state to reflect the changes (remove the deleted row)
       // Inside handleDelete function

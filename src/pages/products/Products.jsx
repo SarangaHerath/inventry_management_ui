@@ -27,7 +27,8 @@ import { Link } from 'react-router-dom';
 import { AddNewProducts } from './AddNewProducts';
 import { EditProducts } from './EditProducts';
 import {Delete, Edit } from '@mui/icons-material';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function createData(productId, name, weight, date, unitPrice, quantity,category) {
   return {
@@ -234,7 +235,7 @@ export const Products = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/product/all');
+        const response = await axios.get('http://localhost:8080/api/v1/product/all');
         const responseData = response.data;
 console.log("Responsesss",responseData);
         const newRows = responseData.map((data) =>
@@ -267,7 +268,7 @@ console.log(newRows);
     console.log(id)
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/product/delete/${id}`);
+      await axios.delete(`http://localhost:8080/api/v1/product/delete/${id}`);
   
       // Update the state to reflect the changes (remove the deleted row)
       const updatedRows = rows.filter((row) => row.productId !== id); // Use row.productId instead of row.id
@@ -275,8 +276,16 @@ console.log(newRows);
   
       // Clear the selected items
       setSelected([]);
+      toast.success("Product deleted successfully:");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Error deleting data:", error);
+      toast.error(`Error delete that product`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2500);
     }
   };
 
@@ -354,6 +363,7 @@ console.log(newRows);
 
   return (
     <Box sx={{  }}>
+       <ToastContainer />
     <div style={{ display: 'flex', justifyContent: 'flex-end',marginBottom:"20px" }}>
       <Link to="">
       <Button variant="contained" onClick={handleOpen} >Add Product + </Button>

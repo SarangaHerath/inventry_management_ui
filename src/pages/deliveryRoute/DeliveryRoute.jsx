@@ -207,7 +207,7 @@ export const DeliveryRoute = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/route/all"
+          "http://localhost:8080/api/v1/route/all"
         );
         const responseData = response.data;
         console.log(responseData);
@@ -259,7 +259,7 @@ export const DeliveryRoute = () => {
   const handleDelete = async (id) => {
     try {
       // Send DELETE request to the API endpoint
-      await axios.delete(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/route/delete/${id}`);
+      await axios.delete(`http://localhost:8080/api/v1/route/delete/${id}`);
   
       // Update the state to reflect the changes (remove the deleted row)
       const updatedRows = rows.filter((row) => row.id !== id);

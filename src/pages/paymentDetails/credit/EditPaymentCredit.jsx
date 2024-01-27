@@ -12,7 +12,7 @@ export const EditPaymentCredit = (props) => {
 
   const [formData, setFormData] = useState({
     creditId: "",
-    shopId: "",
+    shopName: "",
     creditAmount: "",
     billDate: "",
     paidAmount: "",
@@ -33,24 +33,26 @@ export const EditPaymentCredit = (props) => {
         const response = await axios.get(
           `http://localhost:8080/api/v1/credit/getById/${id}`
         );
+     
         const {
           creditId,
-          shopId,
+          shop,
           creditAmount,
           billDate,
           paidAmount,
           lastPaymentDate,
         } = response.data || {};
+  
         setFormData({
           creditId,
-          shopId,
+          shopName: shop.shopName,
           creditAmount,
           billDate,
           paidAmount,
           lastPaymentDate,
         });
-        console.log(response.data);
-        setSelectedShop(shopId);
+      
+        // setSelectedShop(shopId);
         // setSelectedVehicle(vehicleId);
         setOpen(true);
       } catch (error) {
@@ -60,7 +62,7 @@ export const EditPaymentCredit = (props) => {
 
     fetchData();
   }, [id]);
-
+  console.log(formData);
   const fetchOptions = async (url, setState, key) => {
     try {
       const response = await axios.get(url);
@@ -186,7 +188,7 @@ export const EditPaymentCredit = (props) => {
           InputProps={{ readOnly: true }}
           size="small"
           name="shopId"
-          value={selectedshop}
+          value={formData.shopName}
           onChange={(e) =>
             handleSelectChange(e, setSelectedShop, setFormData, "shopId")
           }

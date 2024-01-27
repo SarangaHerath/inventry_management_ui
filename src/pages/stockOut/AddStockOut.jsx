@@ -28,7 +28,7 @@ export const AddStockOut = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/product/all"
+          "http://localhost:8080/api/v1/product/all"
         );
         const productdetails = response.data;
         console.log(productdetails);
@@ -48,7 +48,7 @@ const [selectedVehicle,setSelectedVehicle]=useState()
     const fetchVehicle = async () => {
       try {
         const response = await axios.get(
-          "https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/vehicle/all"
+          "http://localhost:8080/api/v1/vehicle/all"
         );
         const vehicledetails = response.data;
 

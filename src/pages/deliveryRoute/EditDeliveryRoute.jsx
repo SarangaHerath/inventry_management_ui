@@ -22,7 +22,7 @@ export const EditDeliveryRoute = (props) => {
     const fetchData = async () => {
       console.log("Fetching data for id:", id);
       try {
-        const response = await axios.get(`https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/route/getById/${id}`);
+        const response = await axios.get(`http://localhost:8080/api/v1/route/getById/${id}`);
         const { id: routeId, routeName } = response.data || {};
         console.log("Data received:", response.data);
         console.log("id:", routeId); // Use the renamed variable here
@@ -47,7 +47,7 @@ export const EditDeliveryRoute = (props) => {
     console.log('Request Body:', formData);
     try {
       const response = await axios.put(
-        `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/route/update`,
+        `http://localhost:8080/api/v1/route/update`,
         formData
       );
 

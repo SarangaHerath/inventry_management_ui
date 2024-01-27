@@ -27,7 +27,7 @@ export const EditStockOut = (props) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/getById/${id}`
+          `http://localhost:8080/api/v1/stock-out/getById/${id}`
         );
         const { stockOutId, product, vehicle, quantity, dateOut } =
           response.data || {};
@@ -58,7 +58,7 @@ export const EditStockOut = (props) => {
   
   const fetchProduct = async () => {
     try {
-      const response = await axios.get("https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/product/all");
+      const response = await axios.get("http://localhost:8080/api/v1/product/all");
       const productData = response.data;
       console.log(productData)
       const productOptions = productData.map((product) => (
@@ -81,7 +81,7 @@ export const EditStockOut = (props) => {
   
   const fetchVehicle = async () => {
     try {
-      const response = await axios.get("https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/vehicle/all");
+      const response = await axios.get("http://localhost:8080/api/v1/vehicle/all");
       const vehicleData = response.data;
       console.log(vehicleData)
       const vehicleOptions = vehicleData.map((vehicle) => (
@@ -115,7 +115,7 @@ export const EditStockOut = (props) => {
 
     try {
         const response = await axios.put(
-            `https://inventrymanagement-springboot-7914283b4e2d.herokuapp.com/api/v1/stock-out/update`,
+            `http://localhost:8080/api/v1/stock-out/update`,
             {
                 ...formData,
             }
